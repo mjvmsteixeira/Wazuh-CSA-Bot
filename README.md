@@ -132,6 +132,7 @@ Now you can follow the on-screen instructions in the interactive menu to use the
 This tool was developed by Hazem Mohamed - Wazuh Ambassador in Egypt.
 
     Wazuh Ambassador Profile
+    https://wazuh.com/ambassadors/hazem-mohamed/ 
 
 📜 License / الترخيص
 
