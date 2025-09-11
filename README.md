@@ -1,19 +1,21 @@
 
 <img width="775" height="408" alt="Screenshot 2025-09-07 121352" src="https://github.com/user-attachments/assets/99a5cf84-b9c9-4ac9-ae95-08688d9a52f3" />
 
-Wazuh SCA AI Analyst
+# Wazuh SCA AI Analyst
 
 <div align="center">
 <strong>
 <a href="#-about-the-project">English</a> | <a href="#-عن-المشروع">عربي</a>
 </strong>
 </div>
-📖 About the Project
+# 📖 About the Project
 
 Wazuh SCA AI Analyst is a powerful and innovative tool designed to help cybersecurity analysts and system administrators understand and remediate Security Configuration Assessment (SCA) scan results within the Wazuh platform.
 
 Instead of reading complex technical reports, this tool utilizes a large language model (LLM) that runs completely offline to analyze these reports. Through a user-friendly interactive menu, it provides a simplified explanation of the problem, detailed remediation steps, and the ability to export these reports as PDF files in both English and Arabic.
-✨ Features
+
+
+# ✨ Features
 
     Interactive and Easy-to-Use Menu: A Text-based User Interface (TUI) makes interacting with the tool simple and direct.
 
@@ -28,7 +30,7 @@ Instead of reading complex technical reports, this tool utilizes a large languag
     High Flexibility: Ability to analyze any agent and any check easily through the menu.
 
 <br>
-📖 عن المشروع
+# 📖 عن المشروع
 
 Wazuh SCA AI Analyst هي أداة قوية ومبتكرة مصممة لمساعدة محللي الأمن السيبراني ومديري الأنظمة على فهم ومعالجة نتائج فحص الإعدادات الأمنية (SCA) في منصة Wazuh.
 
@@ -75,8 +77,8 @@ The system is based on a simple architecture of several scripts working together
 1. Setup the Project / تجهيز المشروع
 
 # Clone the repository (or create a folder and place all scripts inside)
-git clone [your-repository-link]
-cd [repository-name]
+git clone https://github.com/Hazematiya2023/Wazuh-CIS--AI-Analyzer.git
+cd 
 
 # Create a virtual environment
 python3 -m venv ai_env
@@ -95,10 +97,11 @@ Download a language model in GGUF format from sources like Hugging Face. We reco
 wget "[https://huggingface.co/QuantFactory/Meta-Llama-3-8B-Instruct-GGUF/resolve/main/Meta-Llama-3-8B-Instruct.Q4_K_M.gguf](https://huggingface.co/QuantFactory/Meta-Llama-3-8B-Instruct-GGUF/resolve/main/Meta-Llama-3-8B-Instruct.Q4_K_M.gguf)" -O llama-3-8b-instruct.Q4_K_M.gguf
 
 
+
 Place the downloaded model file in your project directory. Important: Open the ai_engine.py file and update the MODEL_PATH variable to point to the correct name of your model file.
 
 # Example inside ai_engine.py
-MODEL_PATH = "llama-3-8b-instruct.Q4_K_M.gguf" 
+MODEL_PATH = "Meta-Llama-3-8B-Instruct.Q4_K_S.gguf" 
 
 
 3. Configure the Settings / ضبط الإعدادات
@@ -106,7 +109,7 @@ MODEL_PATH = "llama-3-8b-instruct.Q4_K_M.gguf"
 You need to update your Wazuh API password and the target SCA policy in the scripts.
 
 A. Update API Password:
-Open all helper scripts (get_sca_report.py, debug_sca.py, list_sca_checks.py) and update the WAZUH_PASSWORD variable.
+Open all helper scripts (CSA_generator.py, debug_sca.py, list_sca_checks.py) and update the WAZUH_PASSWORD variable.
 
 # Section to modify in the scripts
 # --- SETTINGS ---
