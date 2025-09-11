@@ -161,8 +161,14 @@ python3 ai_menu.py
 
 
 Now you can follow the on-screen instructions in the interactive menu to use the tool.
-
+# Example : for check Failed ID 16001
 <img width="908" height="980" alt="Screenshot 2025-09-07 122323" src="https://github.com/user-attachments/assets/6f3c7985-722c-4b95-92ec-1057ee4a371a" />
+# Example : for check Failed ID 16004
+<img width="892" height="889" alt="Screenshot 2025-09-08 143852" src="https://github.com/user-attachments/assets/9bb765ba-b66e-4e8d-80a3-5bc89df0530c" />
+
+also you can generate PDF file and it will be stored under the same folder , and you can transfer it using any sftp application to your PC.
+
+# This is example for PDF report generate by this tool:
 
 
 
