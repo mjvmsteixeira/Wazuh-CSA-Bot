@@ -1,7 +1,7 @@
-Wazuh SCA AI Analyst
 
 <img width="775" height="408" alt="Screenshot 2025-09-07 121352" src="https://github.com/user-attachments/assets/99a5cf84-b9c9-4ac9-ae95-08688d9a52f3" />
 
+Wazuh SCA AI Analyst
 
 <div align="center">
 <strong>
@@ -51,9 +51,9 @@ Wazuh SCA AI Analyst هي أداة قوية ومبتكرة مصممة لمساع
 
 The system is based on a simple architecture of several scripts working together:
 
-    main_menu.py (Main Menu): The primary user interface. It displays the banner, handles user choices, and calls other scripts with the correct parameters.
+    ai_menu.py (Main Menu): The primary user interface. It displays the banner, handles user choices, and calls other scripts with the correct parameters.
 
-    get_sca_report.py (Report Generator): The client that connects to the Wazuh API to fetch scan data, sends it to the AI engine, and then prints or saves the report as a PDF.
+    CSA_generator.py (Report Generator): The client that connects to the Wazuh API to fetch scan data, sends it to the AI engine, and then prints or saves the report as a PDF.
 
     ai_engine.py (AI Engine): The server that runs in the background. It loads the language model into memory and waits for analysis requests to process and respond to.
 
@@ -72,11 +72,11 @@ The system is based on a simple architecture of several scripts working together
     A font that supports Arabic installed on the server (like ttf-dejavu) to correctly render Arabic reports in PDF files.
 
 🚀 Installation and Usage / خطوات التثبيت والاستخدام
-1. Setup the Project
+1. Setup the Project / تجهيز المشروع
 
 # Clone the repository (or create a folder and place all scripts inside)
-git clone https://github.com/Hazematiya2023/Wazuh-CIS--AI-Analyzer
-cd Wazuh-CIS--AI-Analyzer
+git clone [your-repository-link]
+cd [repository-name]
 
 # Create a virtual environment
 python3 -m venv ai_env
@@ -87,21 +87,56 @@ source ai_env/bin/activate
 # Install all required libraries
 pip install flask llama-cpp-python requests fpdf2 arabic_reshaper python-bidi
 
-2. Download the AI Model
 
-    Download a language model in GGUF format from sources like Hugging Face. We recommend using Llama-3-8B-Instruct-Q4_K_M.gguf.
+2. Download the AI Model / تحميل نموذج الذكاء الاصطناعي
 
-    Place the downloaded model file in the same project directory.
+Download a language model in GGUF format from sources like Hugging Face. We recommend Llama-3-8B-Instruct-Q4_K_M.gguf. You can download it directly using the following command:
 
-    Important: Open the ai_engine.py file and update the MODEL_PATH variable to point to the correct path of your model file.
+wget "[https://huggingface.co/QuantFactory/Meta-Llama-3-8B-Instruct-GGUF/resolve/main/Meta-Llama-3-8B-Instruct.Q4_K_M.gguf](https://huggingface.co/QuantFactory/Meta-Llama-3-8B-Instruct-GGUF/resolve/main/Meta-Llama-3-8B-Instruct.Q4_K_M.gguf)" -O llama-3-8b-instruct.Q4_K_M.gguf
 
-3. Configure the Settings
 
-    Open get_sca_report.py (and other helper scripts) and update the WAZUH_PASSWORD variable with your Wazuh API password.
+Place the downloaded model file in your project directory. Important: Open the ai_engine.py file and update the MODEL_PATH variable to point to the correct name of your model file.
 
-    If needed, update the POLICY_ID in the same file to match the policy you want to analyze (e.g., cis_ubuntu20-04 for Ubuntu systems).
+# Example inside ai_engine.py
+MODEL_PATH = "llama-3-8b-instruct.Q4_K_M.gguf" 
 
-4. Run the Tool
+
+3. Configure the Settings / ضبط الإعدادات
+
+You need to update your Wazuh API password and the target SCA policy in the scripts.
+
+A. Update API Password:
+Open all helper scripts (get_sca_report.py, debug_sca.py, list_sca_checks.py) and update the WAZUH_PASSWORD variable.
+
+# Section to modify in the scripts
+# --- SETTINGS ---
+WAZUH_API_URL = "[https://127.0.0.1:55000](https://127.0.0.1:55000)"
+WAZUH_USER = "wazuh"
+WAZUH_PASSWORD = "YOUR_API_PASSWORD" # <--- Update your password here
+# ...
+
+
+B. Update Policy ID:
+The POLICY_ID variable determines which set of compliance checks to analyze. Open get_sca_report.py and list_sca_checks.py and change the POLICY_ID to match the operating system of the agent you are analyzing.
+
+# Section to modify in the scripts
+# --- SETTINGS ---
+# ...
+POLICY_ID = "cis_win2016" # <--- Change this value
+# ...
+
+
+Here are some common examples for POLICY_ID:
+
+    cis_win2016 for Windows Server 2016
+
+    cis_win2019 for Windows Server 2019
+
+    cis_ubuntu20-04 for Ubuntu 20.04
+
+    cis_rhel8 for Red Hat 8
+
+4. Run the Tool / تشغيل الأداة
 
 You will need two open terminal windows.
 
@@ -113,6 +148,7 @@ source ai_env/bin/activate
 # Run the AI engine and leave it running
 python3 ai_engine.py
 
+
 In Terminal 2 (Start the Main Menu):
 
 # Activate the environment
@@ -120,6 +156,9 @@ source ai_env/bin/activate
 
 # Run the main menu
 python3 ai_menu.py
+
+
+
 
 Now you can follow the on-screen instructions in the interactive menu to use the tool.
 
