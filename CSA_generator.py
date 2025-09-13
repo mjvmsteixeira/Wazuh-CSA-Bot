@@ -13,7 +13,7 @@ import re # <-- Added for sanitizing text
 # --- Settings ---
 WAZUH_API_URL = "https://127.0.0.1:55000"
 WAZUH_USER = "wazuh"
-WAZUH_PASSWORD = "ORhtfcqO7Dbr9y2V.EalD8fgBHmOJD9w" # <--- Make sure to set the correct password
+WAZUH_PASSWORD = "Wazuh API Password" # <--- Make sure to set the correct password
 POLICY_ID = "cis_win2016" 
 AI_ENGINE_URL = "http://127.0.0.1:5001/analyze"
 # -----------------
