@@ -78,7 +78,9 @@ The system is based on a simple architecture of several scripts working together
 
 # Clone the repository (or create a folder and place all scripts inside)
 git clone https://github.com/Hazematiya2023/Wazuh-CIS--AI-Analyzer.git
-cd 
+
+
+cd Wazuh-CIS--AI-Analyzer
 
 # Create a virtual environment
 python3 -m venv ai_env
@@ -175,6 +177,17 @@ also you can generate PDF file and it will be stored under the same folder , and
 
 # This is example for PDF report generate by this tool:
 
+<img width="756" height="554" alt="Screenshot 2025-09-11 104110" src="https://github.com/user-attachments/assets/624fd901-c2f1-4de0-adfe-8288b9cd0d45" />
+
+
+
+
+<img width="968" height="533" alt="Screenshot 2025-09-14 003020" src="https://github.com/user-attachments/assets/e84339e1-a7c1-4f44-a797-b59248f34f79" />
+
+
+
+<img width="1592" height="1016" alt="Screenshot 2025-09-14 005704" src="https://github.com/user-attachments/assets/1da91c12-ff19-479c-8720-fefd66c52ea5" />
+
 
 
 ✍️ Author / المؤلف
@@ -183,6 +196,8 @@ This tool was developed by Hazem Mohamed - Wazuh Ambassador in Egypt.
 
     Wazuh Ambassador Profile
     https://wazuh.com/ambassadors/hazem-mohamed/ 
+    LinkedIn:
+    https://www.linkedin.com/in/hazem-mohamed-03742957/
 
 📜 License / الترخيص
 
