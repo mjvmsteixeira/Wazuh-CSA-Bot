@@ -6,6 +6,20 @@
 
 # Wazuh SCA AI Analyst
 
+⚠️ Disclaimer
+
+The remediation steps provided by the AI model . The Developer/Auther of this tool are not responsible for any direct or indirect damage resulting from the application of these solutions. Always test configurations in a test environment before deploying them to production.
+
+
+<div dir="rtl">⚠️ إخلاء مسؤولية</div>
+
+<div dir="rtl">
+خطوات الحل المقدمة من نموذج الذكاء الاصطناعي , مؤلف ومطور هذه الأداة غير مسؤولين عن أي ضرر مباشر أو غير مباشر ينتج عن تطبيق هذه الحلول. قم دائما باختبار الإعدادات في بيئة تجريبية قبل تطبيقها في بيئة الإنتاج.
+</div>
+
+
+
+
 <div align="center">
 <strong>
 <a href="#-about-the-project">English</a> | <a href="#-عن-المشروع">عربي</a>
