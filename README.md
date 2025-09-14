@@ -81,10 +81,10 @@ The system is based on a simple architecture of several scripts working together
 1. Setup the Project / تجهيز المشروع
 
 # Clone the repository (or create a folder and place all scripts inside)
-git clone https://github.com/Hazematiya2023/Wazuh-CIS--AI-Analyzer.git
+git clone https://github.com/Hazematiya2023/Wazuh-CIS--AI-Analyzer.git](https://github.com/Hazematiya2023/Wazuh-CSA-Bot.git
 
 
-cd Wazuh-CIS--AI-Analyzer
+cd Wazuh-CSA-Bot
 
 # Create a virtual environment
 python3 -m venv ai_env
