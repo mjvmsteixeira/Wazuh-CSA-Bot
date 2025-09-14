@@ -1,5 +1,8 @@
+![CSA-Bot](https://github.com/user-attachments/assets/352ca8e3-79d9-4477-af03-f19450e3c4f1)
 
-<img width="775" height="408" alt="Screenshot 2025-09-07 121352" src="https://github.com/user-attachments/assets/99a5cf84-b9c9-4ac9-ae95-08688d9a52f3" />
+
+<img width="770" height="424" alt="Screenshot 2025-09-14 140338" src="https://github.com/user-attachments/assets/2fa6c821-817e-4fde-84f1-860a88a90fff" />
+
 
 # Wazuh SCA AI Analyst
 
@@ -17,7 +20,8 @@ Instead of reading complex technical reports, this tool utilizes a large languag
 
 # ✨ Features
 
-    Interactive and Easy-to-Use Menu: A Text-based User Interface (TUI) makes interacting with the tool simple and direct.
+    Interactive and Easy-to-Use Menu: A Text-based User Interface (TUI) makes interacting wit![Uploading Screenshot 2025-09-14 140338.png…]()
+h the tool simple and direct.
 
     Intelligent Analysis: Uses a local (Offline) AI model to transform technical data into practical explanations and steps.
 
