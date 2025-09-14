@@ -1,7 +1,6 @@
 ![CSA-Bot](https://github.com/user-attachments/assets/352ca8e3-79d9-4477-af03-f19450e3c4f1)
 
 
-<img width="770" height="424" alt="Screenshot 2025-09-14 140338" src="https://github.com/user-attachments/assets/2fa6c821-817e-4fde-84f1-860a88a90fff" />
 
 
 # Wazuh SCA AI Analyst
@@ -34,8 +33,10 @@ Instead of reading complex technical reports, this tool utilizes a large languag
 
 # ✨ Features
 
-    Interactive and Easy-to-Use Menu: A Text-based User Interface (TUI) makes interacting wit![Uploading Screenshot 2025-09-14 140338.png…]()
-h the tool simple and direct.
+    Interactive and Easy-to-Use Menu: A Text-based User Interface (TUI) makes interacting with the tool simple and direct.
+    
+    <img width="770" height="424" alt="Screenshot 2025-09-14 140338" src="https://github.com/user-attachments/assets/2fa6c821-817e-4fde-84f1-860a88a90fff" />
+
 
     Intelligent Analysis: Uses a local (Offline) AI model to transform technical data into practical explanations and steps.
 
@@ -55,7 +56,7 @@ Wazuh SCA AI Analyst هي أداة قوية ومبتكرة مصممة لمساع
 بدلاً من قراءة التقارير الفنية المعقدة، تقوم هذه الأداة باستخدام نموذج لغوي كبير (LLM) يعمل بشكل كامل بدون اتصال بالإنترنت لتحليل هذه التقارير. من خلال قائمة تفاعلية سهلة الاستخدام، تقدم الأداة شرحًا مبسطًا للمشكلة، وخطوات حل تفصيلية، مع إمكانية تصدير هذه التقارير بصيغة PDF باللغتين العربية والإنجليزية.
 ✨ المميزات
 
-    قائمة تفاعلية سهلة الاستخدام: واجهة مستخدم نصية (TUI) تجعل التعامل مع الأداة بسيطًا ومباشرًا.
+    قائمة تفاعلية سهلة الاستخدام: واجهة مستخدم نصية (TUI) تجعل التعامل مع الأداة بسيطًا ومباشرا.
 
     تحليل ذكي: يستخدم نموذج ذكاء اصطناعي محلي (Offline) لتحويل البيانات الفنية إلى شرح وخطوات عملية.
 
