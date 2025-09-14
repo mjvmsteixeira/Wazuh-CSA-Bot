@@ -35,7 +35,7 @@ Instead of reading complex technical reports, this tool utilizes a large languag
 
     Interactive and Easy-to-Use Menu: A Text-based User Interface (TUI) makes interacting with the tool simple and direct.
     
-    <img width="770" height="424" alt="Screenshot 2025-09-14 140338" src="https://github.com/user-attachments/assets/2fa6c821-817e-4fde-84f1-860a88a90fff" />
+<img width="770" height="424" alt="Screenshot 2025-09-14 140338" src="https://github.com/user-attachments/assets/56a0d040-035e-48af-9c45-bb349a864936" />
 
 
     Intelligent Analysis: Uses a local (Offline) AI model to transform technical data into practical explanations and steps.
