@@ -49,7 +49,7 @@ Instead of reading complex technical reports, this tool utilizes a large languag
 
     High Flexibility: Ability to analyze any agent and any check easily through the menu.
 
-<br>
+
 # 📖 عن المشروع
 
 Wazuh SCA AI Analyst هي أداة قوية ومبتكرة مصممة لمساعدة محللي الأمن السيبراني ومديري الأنظمة على فهم ومعالجة نتائج فحص الإعدادات الأمنية (SCA) في منصة Wazuh.
