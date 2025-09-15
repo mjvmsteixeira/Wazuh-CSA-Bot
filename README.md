@@ -103,26 +103,28 @@ cd Wazuh-CSA-Bot
 ```
 
 # Create a virtual environment
+```bash
 python3 -m venv ai_env
-
+```
 # Activate the environment
 source ai_env/bin/activate
 
 # 1.Install all required libraries
+```bash
 pip install flask llama-cpp-python requests fpdf2 arabic_reshaper python-bidi
-
+```
 
 # 2. Download the AI Model / تحميل نموذج الذكاء الاصطناعي
 
 Download a language model in GGUF format from sources like Hugging Face. We recommend Llama-3-8B-Instruct-Q4_K_M.gguf. You can download it directly using the following command:
-
+```bash
 wget "[https://huggingface.co/QuantFactory/Meta-Llama-3-8B-Instruct-GGUF/resolve/main/Meta-Llama-3-8B-Instruct.Q4_K_M.gguf](https://huggingface.co/QuantFactory/Meta-Llama-3-8B-Instruct-GGUF/resolve/main/Meta-Llama-3-8B-Instruct.Q4_K_M.gguf)" -O llama-3-8b-instruct.Q4_K_M.gguf
-
+```
 
 Place the downloaded model file in your project directory. Important: Open the ai_engine.py file and update the MODEL_PATH variable to point to the correct name of your model file.
 
 # Example inside ai_engine.py
-MODEL_PATH = "Meta-Llama-3-8B-Instruct.Q4_K_S.gguf" 
+MODEL_PATH = "Meta-Llama-3-8B-Instruct.Q4_K_S.gguf" <<<---- Enter the acurate Path for modle file
 
 
 # 3. Configure the Settings / ضبط الإعدادات
@@ -169,17 +171,20 @@ In Terminal 1 (Start the Server):
 `source ai_env/bin/activate`
 
 # Run the AI engine and leave it running
+```bash
 python3 ai_engine.py
-
+```
 
 In Terminal 2 (Start the Main Menu):
 
 # Activate the environment
+```bash
 source ai_env/bin/activate
-
+```
 # Run the main menu
+```bash
 python3 ai_menu.py
-
+```
 
 
 
