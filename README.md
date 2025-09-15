@@ -96,7 +96,7 @@ The system is based on a simple architecture of several scripts working together
 1. Setup the Project / تجهيز المشروع
 
 # Clone the repository (or create a folder and place all scripts inside)
-`git clone https://github.com/Hazematiya2023/Wazuh-CSA-Bot.git`
+```bash git clone https://github.com/Hazematiya2023/Wazuh-CSA-Bot.git```
 
 `cd Wazuh-CSA-Bot`
 
