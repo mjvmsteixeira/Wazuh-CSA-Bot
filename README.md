@@ -72,6 +72,17 @@ Wazuh SCA AI Analyst هي أداة قوية ومبتكرة مصممة لمساع
     6-- مرونة عالية: إمكانية تحليل أي عميل (Agent) وأي فحص (Check) بسهولة من خلال القائمة.
 </div> 
 
+
+# If you need to know how to develop this tool:
+
+*The AI Backend (The Brain of the Tool): The core of the tool is an AI that works offline to maintain data privacy. I chose the Meta-Llama-3-8B-Instruct model in GGUF format for its excellent balance between power and size. Using the llama-cpp-python library, I was able to run it efficiently on a standard CPU. After that, I created a simple API around it using Flask to build the "AI Engine."
+
+*The Wazuh Connector (The Client): To get the data, I made another script (CSA_generator.py) that uses the requests library to connect to the Wazuh API, fetch SCA data for a specific agent, and send it to the smart engine.
+
+*The User Interface (The Menu): To make it user-friendly, I created an interactive command-line menu called (ai_menu.py) using Python's subprocess module to serve as the main user interface.
+
+ Finally, I added professional touches like exporting reports as PDF files using the FPDF2 library.
+
 # 🛠️ How it Works / كيف يعمل؟
 
 The system is based on a simple architecture of several scripts working together:
