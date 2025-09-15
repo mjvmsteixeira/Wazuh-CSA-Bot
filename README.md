@@ -33,9 +33,9 @@ Instead of reading complex technical reports, this tool utilizes a large languag
 
 
 # ✨ Features
-
+<div align="center">
     Interactive and Easy-to-Use Menu: A Text-based User Interface (TUI) makes interacting with the tool simple and direct.
-    
+</div>    
 <img width="770" height="424" alt="Screenshot 2025-09-14 140338" src="https://github.com/user-attachments/assets/56a0d040-035e-48af-9c45-bb349a864936" />
 
 
