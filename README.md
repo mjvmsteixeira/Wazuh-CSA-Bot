@@ -96,25 +96,27 @@ The system is based on a simple architecture of several scripts working together
 1. Setup the Project / تجهيز المشروع
 
 # Clone the repository (or create a folder and place all scripts inside)
-```bash git clone https://github.com/Hazematiya2023/Wazuh-CSA-Bot.git
+```bash
+git clone https://github.com/Hazematiya2023/Wazuh-CSA-Bot.git
 
-cd Wazuh-CSA-Bot```
+cd Wazuh-CSA-Bot
+```
 
 # Create a virtual environment
-`python3 -m venv ai_env`
+python3 -m venv ai_env
 
 # Activate the environment
-`source ai_env/bin/activate`
+source ai_env/bin/activate
 
 # 1.Install all required libraries
-`pip install flask llama-cpp-python requests fpdf2 arabic_reshaper python-bidi`
+pip install flask llama-cpp-python requests fpdf2 arabic_reshaper python-bidi
 
 
 # 2. Download the AI Model / تحميل نموذج الذكاء الاصطناعي
 
 Download a language model in GGUF format from sources like Hugging Face. We recommend Llama-3-8B-Instruct-Q4_K_M.gguf. You can download it directly using the following command:
 
-`wget "[https://huggingface.co/QuantFactory/Meta-Llama-3-8B-Instruct-GGUF/resolve/main/Meta-Llama-3-8B-Instruct.Q4_K_M.gguf](https://huggingface.co/QuantFactory/Meta-Llama-3-8B-Instruct-GGUF/resolve/main/Meta-Llama-3-8B-Instruct.Q4_K_M.gguf)" -O llama-3-8b-instruct.Q4_K_M.gguf`
+wget "[https://huggingface.co/QuantFactory/Meta-Llama-3-8B-Instruct-GGUF/resolve/main/Meta-Llama-3-8B-Instruct.Q4_K_M.gguf](https://huggingface.co/QuantFactory/Meta-Llama-3-8B-Instruct-GGUF/resolve/main/Meta-Llama-3-8B-Instruct.Q4_K_M.gguf)" -O llama-3-8b-instruct.Q4_K_M.gguf
 
 
 Place the downloaded model file in your project directory. Important: Open the ai_engine.py file and update the MODEL_PATH variable to point to the correct name of your model file.
@@ -167,16 +169,16 @@ In Terminal 1 (Start the Server):
 `source ai_env/bin/activate`
 
 # Run the AI engine and leave it running
-`python3 ai_engine.py`
+python3 ai_engine.py
 
 
 In Terminal 2 (Start the Main Menu):
 
 # Activate the environment
-`source ai_env/bin/activate`
+source ai_env/bin/activate
 
 # Run the main menu
-`python3 ai_menu.py`
+python3 ai_menu.py
 
 
 
