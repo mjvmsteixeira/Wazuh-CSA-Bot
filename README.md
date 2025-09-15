@@ -98,7 +98,7 @@ The system is based on a simple architecture of several scripts working together
 # Clone the repository (or create a folder and place all scripts inside)
 `git clone https://github.com/Hazematiya2023/Wazuh-CSA-Bot.git`
 
-cd Wazuh-CSA-Bot
+`cd Wazuh-CSA-Bot`
 
 # Create a virtual environment
 `python3 -m venv ai_env`
@@ -106,16 +106,15 @@ cd Wazuh-CSA-Bot
 # Activate the environment
 `source ai_env/bin/activate`
 
-# Install all required libraries
+# 1.Install all required libraries
 `pip install flask llama-cpp-python requests fpdf2 arabic_reshaper python-bidi`
 
 
-2. Download the AI Model / تحميل نموذج الذكاء الاصطناعي
+# 2. Download the AI Model / تحميل نموذج الذكاء الاصطناعي
 
 Download a language model in GGUF format from sources like Hugging Face. We recommend Llama-3-8B-Instruct-Q4_K_M.gguf. You can download it directly using the following command:
-`
-wget "[https://huggingface.co/QuantFactory/Meta-Llama-3-8B-Instruct-GGUF/resolve/main/Meta-Llama-3-8B-Instruct.Q4_K_M.gguf](https://huggingface.co/QuantFactory/Meta-Llama-3-8B-Instruct-GGUF/resolve/main/Meta-Llama-3-8B-Instruct.Q4_K_M.gguf)" -O llama-3-8b-instruct.Q4_K_M.gguf`
 
+`wget "[https://huggingface.co/QuantFactory/Meta-Llama-3-8B-Instruct-GGUF/resolve/main/Meta-Llama-3-8B-Instruct.Q4_K_M.gguf](https://huggingface.co/QuantFactory/Meta-Llama-3-8B-Instruct-GGUF/resolve/main/Meta-Llama-3-8B-Instruct.Q4_K_M.gguf)" -O llama-3-8b-instruct.Q4_K_M.gguf`
 
 
 Place the downloaded model file in your project directory. Important: Open the ai_engine.py file and update the MODEL_PATH variable to point to the correct name of your model file.
@@ -124,19 +123,18 @@ Place the downloaded model file in your project directory. Important: Open the a
 MODEL_PATH = "Meta-Llama-3-8B-Instruct.Q4_K_S.gguf" 
 
 
-3. Configure the Settings / ضبط الإعدادات
+# 3. Configure the Settings / ضبط الإعدادات
 
 You need to update your Wazuh API password and the target SCA policy in the scripts.
 
 A. Update API Password:
 Open all helper scripts (CSA_generator.py, debug_sca.py, list_sca_checks.py) and update the WAZUH_PASSWORD variable.
 
-# Section to modify in the scripts
-# --- SETTINGS ---
+ Section to modify in the scripts
+ --- SETTINGS ---
 WAZUH_API_URL = "[https://127.0.0.1:55000](https://127.0.0.1:55000)"    <<<<---- or enter the  IP for Wazuh Manager Server
 WAZUH_USER = "wazuh"
 WAZUH_PASSWORD = "YOUR_API_PASSWORD" # <--- Update your password here
-# ...
 
 
 B. Update Policy ID:
@@ -159,7 +157,7 @@ Here are some common examples for POLICY_ID:
 
    * cis_rhel8 for Red Hat 8
 
-4. Run the Tool / تشغيل الأداة
+# 4. Run the Tool / تشغيل الأداة
 
 You will need two open terminal windows.
 
