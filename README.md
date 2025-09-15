@@ -49,7 +49,7 @@ Instead of reading complex technical reports, this tool utilizes a large languag
 5-- High Flexibility: Ability to analyze any agent and any check easily through the menu.
 
 </div> 
-# 📖 عن المشروع
+# 📖 عن المشروع 
 
 Wazuh SCA AI Analyst هي أداة قوية ومبتكرة مصممة لمساعدة محللي الأمن السيبراني ومديري الأنظمة على فهم ومعالجة نتائج فحص الإعدادات الأمنية (SCA) في منصة Wazuh.
 
@@ -69,31 +69,23 @@ Wazuh SCA AI Analyst هي أداة قوية ومبتكرة مصممة لمساع
 
     6-- مرونة عالية: إمكانية تحليل أي عميل (Agent) وأي فحص (Check) بسهولة من خلال القائمة.
 
-🛠️ How it Works / كيف يعمل؟
+# 🛠️ How it Works / كيف يعمل؟
 
 The system is based on a simple architecture of several scripts working together:
-
-   1-- ai_menu.py (Main Menu): The primary user interface. It displays the banner, handles user choices, and calls other scripts with the correct parameters.
-
-   2-- CSA_generator.py (Report Generator): The client that connects to the Wazuh API to fetch scan data, sends it to the AI engine, and then prints or saves the report as a PDF.
-
-   3-- ai_engine.py (AI Engine): The server that runs in the background. It loads the language model into memory and waits for analysis requests to process and respond to.
+1-- ai_menu.py (Main Menu): The primary user interface. It displays the banner, handles user choices, and calls other scripts with the correct parameters.
+2-- CSA_generator.py (Report Generator): The client that connects to the Wazuh API to fetch scan data, sends it to the AI engine, and then prints or saves the report as a PDF.
+3-- ai_engine.py (AI Engine): The server that runs in the background. It loads the language model into memory and waits for analysis requests to process and respond to.
 
 *** Helper Scripts: Such as debug_sca.py and list_sca_checks.py to help with diagnostics and finding check IDs.
 
-📋 Requirements / المتطلبات
+# 📋 Requirements / المتطلبات
+1- A running Wazuh server.
+2- Python 3.8 or newer.
+3- The following libraries: flask, llama-cpp-python, requests, fpdf2, arabic_reshaper, python-bidi.
+4- A large language model in GGUF format (the project was tested with Llama 3 8B Instruct).
+5 -A font that supports Arabic installed on the server (like ttf-dejavu) to correctly render Arabic reports in PDF files.
 
-    1- A running Wazuh server.
-
-    2- Python 3.8 or newer.
-
-    3- The following libraries: flask, llama-cpp-python, requests, fpdf2, arabic_reshaper, python-bidi.
-
-    4- A large language model in GGUF format (the project was tested with Llama 3 8B Instruct).
-
-    5 -A font that supports Arabic installed on the server (like ttf-dejavu) to correctly render Arabic reports in PDF files.
-
-🚀 Installation and Usage / خطوات التثبيت والاستخدام
+# 🚀 Installation and Usage / خطوات التثبيت والاستخدام
 1. Setup the Project / تجهيز المشروع
 
 # Clone the repository (or create a folder and place all scripts inside)
@@ -220,7 +212,7 @@ also you can generate PDF file and it will be stored under the same folder , and
 
 
 
-✍️ Author / المؤلف
+# ✍️ Author / المؤلف
 
 This tool was developed by Hazem Mohamed - Wazuh Ambassador in Egypt.
 
@@ -229,6 +221,6 @@ This tool was developed by Hazem Mohamed - Wazuh Ambassador in Egypt.
     LinkedIn:
     https://www.linkedin.com/in/hazem-mohamed-03742957/
 
-📜 License / الترخيص
+# 📜 License / الترخيص
 
 This project is licensed under the MIT License. See the LICENSE file for more details.
