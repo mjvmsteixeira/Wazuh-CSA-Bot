@@ -25,6 +25,7 @@ The remediation steps provided by the AI model . The Developer/Auther of this to
 عن المشروع /About Project
 </strong>
 </div>
+
 # 📖 About the Project
 
 Wazuh SCA AI Analyst is a powerful and innovative tool designed to help cybersecurity analysts and system administrators understand and remediate Security Configuration Assessment (SCA) scan results within the Wazuh platform.
