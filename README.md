@@ -53,20 +53,20 @@ Instead of reading complex technical reports, this tool utilizes a large languag
 
 Wazuh SCA AI Analyst هي أداة قوية ومبتكرة مصممة لمساعدة محللي الأمن السيبراني ومديري الأنظمة على فهم ومعالجة نتائج فحص الإعدادات الأمنية (SCA) في منصة Wazuh.
 
-بدلاً من قراءة التقارير الفنية المعقدة، تقوم هذه الأداة باستخدام نموذج لغوي كبير (LLM) يعمل بشكل كامل بدون اتصال بالإنترنت لتحليل هذه التقارير. من خلال قائمة تفاعلية سهلة الاستخدام، تقدم الأداة شرحًا مبسطًا للمشكلة، وخطوات حل تفصيلية، مع إمكانية تصدير هذه التقارير بصيغة PDF باللغتين العربية والإنجليزية.
+   *بدلا من قراءة التقارير الفنية المعقدة، تقوم هذه الأداة باستخدام نموذج لغوي كبير  (LLM) يعمل بشكل كامل بدون اتصال بالإنترنت لتحليل هذه التقارير. من خلال قائمة تفاعلية سهلة الاستخدام، تقدم الأداة شرحًا مبسطًا للمشكلة، وخطوات حل تفصيلية، مع إمكانية تصدير هذه التقارير بصيغة PDF باللغتين العربية والإنجليزية.
 ✨ المميزات
 
-    قائمة تفاعلية سهلة الاستخدام: واجهة مستخدم نصية (TUI) تجعل التعامل مع الأداة بسيطًا ومباشرا.
+    *قائمة تفاعلية سهلة الاستخدام: واجهة مستخدم نصية (TUI) تجعل التعامل مع الأداة بسيطًا ومباشرا.
 
-    تحليل ذكي: يستخدم نموذج ذكاء اصطناعي محلي (Offline) لتحويل البيانات الفنية إلى شرح وخطوات عملية.
+    *تحليل ذكي: يستخدم نموذج ذكاء اصطناعي محلي (Offline) لتحويل البيانات الفنية إلى شرح وخطوات عملية.
 
-    دعم متعدد اللغات: إمكانية إنشاء التقارير باللغة العربية أو الإنجليزية.
+    *دعم متعدد اللغات: إمكانية إنشاء التقارير باللغة العربية أو الإنجليزية.
 
-    تصدير احترافي: إمكانية تصدير التقارير النهائية كنص عادي أو كملف PDF منسق.
+    *تصدير احترافي: إمكانية تصدير التقارير النهائية كنص عادي أو كملف PDF منسق.
 
-    يعمل بدون إنترنت: قلب النظام (محرك الذكاء الاصطناعي) يعمل بشكل كامل على السيرفر دون الحاجة للاتصال بأي خدمة سحابية، مما يضمن خصوصية وأمان البيانات.
+    *يعمل بدون إنترنت: قلب النظام (محرك الذكاء الاصطناعي) يعمل بشكل كامل على السيرفر دون الحاجة للاتصال بأي خدمة سحابية، مما يضمن خصوصية وأمان البيانات.
 
-    مرونة عالية: إمكانية تحليل أي عميل (Agent) وأي فحص (Check) بسهولة من خلال القائمة.
+    *مرونة عالية: إمكانية تحليل أي عميل (Agent) وأي فحص (Check) بسهولة من خلال القائمة.
 
 🛠️ How it Works / كيف يعمل؟
 
@@ -82,44 +82,39 @@ The system is based on a simple architecture of several scripts working together
 
 📋 Requirements / المتطلبات
 
-    A running Wazuh server.
+    *A running Wazuh server.
 
-    Python 3.8 or newer.
+    *Python 3.8 or newer.
 
-    The following libraries: flask, llama-cpp-python, requests, fpdf2, arabic_reshaper, python-bidi.
+    *The following libraries: flask, llama-cpp-python, requests, fpdf2, arabic_reshaper, python-bidi.
 
-    A large language model in GGUF format (the project was tested with Llama 3 8B Instruct).
+    *A large language model in GGUF format (the project was tested with Llama 3 8B Instruct).
 
-    A font that supports Arabic installed on the server (like ttf-dejavu) to correctly render Arabic reports in PDF files.
+    *A font that supports Arabic installed on the server (like ttf-dejavu) to correctly render Arabic reports in PDF files.
 
 🚀 Installation and Usage / خطوات التثبيت والاستخدام
 1. Setup the Project / تجهيز المشروع
 
 # Clone the repository (or create a folder and place all scripts inside)
-```bash
-git clone https://github.com/Hazematiya2023/Wazuh-CSA-Bot.git
-`
+`git clone https://github.com/Hazematiya2023/Wazuh-CSA-Bot.git`
 
 cd Wazuh-CSA-Bot
 
 # Create a virtual environment
-```bash
-python3 -m venv ai_env
+`python3 -m venv ai_env`
 
 # Activate the environment
-```bash
-source ai_env/bin/activate
+`source ai_env/bin/activate`
 
 # Install all required libraries
-```bash
-pip install flask llama-cpp-python requests fpdf2 arabic_reshaper python-bidi
+`pip install flask llama-cpp-python requests fpdf2 arabic_reshaper python-bidi`
 
 
 2. Download the AI Model / تحميل نموذج الذكاء الاصطناعي
 
 Download a language model in GGUF format from sources like Hugging Face. We recommend Llama-3-8B-Instruct-Q4_K_M.gguf. You can download it directly using the following command:
-```bash
-wget "[https://huggingface.co/QuantFactory/Meta-Llama-3-8B-Instruct-GGUF/resolve/main/Meta-Llama-3-8B-Instruct.Q4_K_M.gguf](https://huggingface.co/QuantFactory/Meta-Llama-3-8B-Instruct-GGUF/resolve/main/Meta-Llama-3-8B-Instruct.Q4_K_M.gguf)" -O llama-3-8b-instruct.Q4_K_M.gguf
+`
+wget "[https://huggingface.co/QuantFactory/Meta-Llama-3-8B-Instruct-GGUF/resolve/main/Meta-Llama-3-8B-Instruct.Q4_K_M.gguf](https://huggingface.co/QuantFactory/Meta-Llama-3-8B-Instruct-GGUF/resolve/main/Meta-Llama-3-8B-Instruct.Q4_K_M.gguf)" -O llama-3-8b-instruct.Q4_K_M.gguf`
 
 
 
@@ -156,13 +151,13 @@ POLICY_ID = "cis_win2016" # <--- Change this value
 
 Here are some common examples for POLICY_ID:
 
-    cis_win2016 for Windows Server 2016
+   * cis_win2016 for Windows Server 2016
 
-    cis_win2019 for Windows Server 2019
+   * cis_win2019 for Windows Server 2019
 
-    cis_ubuntu20-04 for Ubuntu 20.04
+   * cis_ubuntu20-04 for Ubuntu 20.04
 
-    cis_rhel8 for Red Hat 8
+   * cis_rhel8 for Red Hat 8
 
 4. Run the Tool / تشغيل الأداة
 
@@ -171,21 +166,19 @@ You will need two open terminal windows.
 In Terminal 1 (Start the Server):
 
 # Activate the environment
-```bash
-source ai_env/bin/activate
+`source ai_env/bin/activate`
 
 # Run the AI engine and leave it running
-```bash
-python3 ai_engine.py
+`python3 ai_engine.py`
 
 
 In Terminal 2 (Start the Main Menu):
 
 # Activate the environment
-source ai_env/bin/activate
+`source ai_env/bin/activate`
 
 # Run the main menu
-python3 ai_menu.py
+`python3 ai_menu.py`
 
 
 
