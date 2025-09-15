@@ -54,19 +54,20 @@ Instead of reading complex technical reports, this tool utilizes a large languag
 Wazuh SCA AI Analyst هي أداة قوية ومبتكرة مصممة لمساعدة محللي الأمن السيبراني ومديري الأنظمة على فهم ومعالجة نتائج فحص الإعدادات الأمنية (SCA) في منصة Wazuh.
 
    *بدلا من قراءة التقارير الفنية المعقدة، تقوم هذه الأداة باستخدام نموذج لغوي كبير  (LLM) يعمل بشكل كامل بدون اتصال بالإنترنت لتحليل هذه التقارير. من خلال قائمة تفاعلية سهلة الاستخدام، تقدم الأداة شرحًا مبسطًا للمشكلة، وخطوات حل تفصيلية، مع إمكانية تصدير هذه التقارير بصيغة PDF باللغتين العربية والإنجليزية.
+   
 ✨ المميزات
 
-    *قائمة تفاعلية سهلة الاستخدام: واجهة مستخدم نصية (TUI) تجعل التعامل مع الأداة بسيطًا ومباشرا.
+    1-- قائمة تفاعلية سهلة الاستخدام: واجهة مستخدم نصية (TUI) تجعل التعامل مع الأداة بسيطًا ومباشرا.
 
-    *تحليل ذكي: يستخدم نموذج ذكاء اصطناعي محلي (Offline) لتحويل البيانات الفنية إلى شرح وخطوات عملية.
+    2-- تحليل ذكي: يستخدم نموذج ذكاء اصطناعي محلي (Offline) لتحويل البيانات الفنية إلى شرح وخطوات عملية.
 
-    *دعم متعدد اللغات: إمكانية إنشاء التقارير باللغة العربية أو الإنجليزية.
+    3-- دعم متعدد اللغات: إمكانية إنشاء التقارير باللغة العربية أو الإنجليزية.
 
-    *تصدير احترافي: إمكانية تصدير التقارير النهائية كنص عادي أو كملف PDF منسق.
+    4-- تصدير احترافي: إمكانية تصدير التقارير النهائية كنص عادي أو كملف PDF منسق.
 
-    *يعمل بدون إنترنت: قلب النظام (محرك الذكاء الاصطناعي) يعمل بشكل كامل على السيرفر دون الحاجة للاتصال بأي خدمة سحابية، مما يضمن خصوصية وأمان البيانات.
+    5-- يعمل بدون إنترنت: قلب النظام (محرك الذكاء الاصطناعي) يعمل بشكل كامل على السيرفر دون الحاجة للاتصال بأي خدمة سحابية، مما يضمن خصوصية وأمان البيانات.
 
-    *مرونة عالية: إمكانية تحليل أي عميل (Agent) وأي فحص (Check) بسهولة من خلال القائمة.
+    6-- مرونة عالية: إمكانية تحليل أي عميل (Agent) وأي فحص (Check) بسهولة من خلال القائمة.
 
 🛠️ How it Works / كيف يعمل؟
 
@@ -82,15 +83,15 @@ The system is based on a simple architecture of several scripts working together
 
 📋 Requirements / المتطلبات
 
-    *A running Wazuh server.
+    1- A running Wazuh server.
 
-    *Python 3.8 or newer.
+    2- Python 3.8 or newer.
 
-    *The following libraries: flask, llama-cpp-python, requests, fpdf2, arabic_reshaper, python-bidi.
+    3- The following libraries: flask, llama-cpp-python, requests, fpdf2, arabic_reshaper, python-bidi.
 
-    *A large language model in GGUF format (the project was tested with Llama 3 8B Instruct).
+    4- A large language model in GGUF format (the project was tested with Llama 3 8B Instruct).
 
-    *A font that supports Arabic installed on the server (like ttf-dejavu) to correctly render Arabic reports in PDF files.
+    5 -A font that supports Arabic installed on the server (like ttf-dejavu) to correctly render Arabic reports in PDF files.
 
 🚀 Installation and Usage / خطوات التثبيت والاستخدام
 1. Setup the Project / تجهيز المشروع
@@ -107,8 +108,9 @@ cd Wazuh-CSA-Bot
 python3 -m venv ai_env
 ```
 # Activate the environment
+```bash
 source ai_env/bin/activate
-
+```
 # 1.Install all required libraries
 ```bash
 pip install flask llama-cpp-python requests fpdf2 arabic_reshaper python-bidi
@@ -135,10 +137,14 @@ A. Update API Password:
 Open all helper scripts (CSA_generator.py, debug_sca.py, list_sca_checks.py) and update the WAZUH_PASSWORD variable.
 
  Section to modify in the scripts
+ 
  --- SETTINGS ---
+ 
 WAZUH_API_URL = "[https://127.0.0.1:55000](https://127.0.0.1:55000)"    <<<<---- or enter the  IP for Wazuh Manager Server
+
 WAZUH_USER = "wazuh"
-WAZUH_PASSWORD = "YOUR_API_PASSWORD" # <--- Update your password here
+
+WAZUH_PASSWORD = "YOUR_API_PASSWORD"  <--- Update your password here
 
 
 B. Update Policy ID:
@@ -168,8 +174,9 @@ You will need two open terminal windows.
 In Terminal 1 (Start the Server):
 
 # Activate the environment
-`source ai_env/bin/activate`
-
+```bash
+source ai_env/bin/activate
+```
 # Run the AI engine and leave it running
 ```bash
 python3 ai_engine.py
