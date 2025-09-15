@@ -72,13 +72,13 @@ Wazuh SCA AI Analyst هي أداة قوية ومبتكرة مصممة لمساع
 
 The system is based on a simple architecture of several scripts working together:
 
-    ai_menu.py (Main Menu): The primary user interface. It displays the banner, handles user choices, and calls other scripts with the correct parameters.
+   1-- ai_menu.py (Main Menu): The primary user interface. It displays the banner, handles user choices, and calls other scripts with the correct parameters.
 
-    CSA_generator.py (Report Generator): The client that connects to the Wazuh API to fetch scan data, sends it to the AI engine, and then prints or saves the report as a PDF.
+   2-- CSA_generator.py (Report Generator): The client that connects to the Wazuh API to fetch scan data, sends it to the AI engine, and then prints or saves the report as a PDF.
 
-    ai_engine.py (AI Engine): The server that runs in the background. It loads the language model into memory and waits for analysis requests to process and respond to.
+   3-- ai_engine.py (AI Engine): The server that runs in the background. It loads the language model into memory and waits for analysis requests to process and respond to.
 
-    Helper Scripts: Such as debug_sca.py and list_sca_checks.py to help with diagnostics and finding check IDs.
+*** Helper Scripts: Such as debug_sca.py and list_sca_checks.py to help with diagnostics and finding check IDs.
 
 📋 Requirements / المتطلبات
 
@@ -98,7 +98,7 @@ The system is based on a simple architecture of several scripts working together
 # Clone the repository (or create a folder and place all scripts inside)
 ```bash
 git clone https://github.com/Hazematiya2023/Wazuh-CSA-Bot.git
-
+`
 
 cd Wazuh-CSA-Bot
 
