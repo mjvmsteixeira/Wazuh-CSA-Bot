@@ -38,16 +38,15 @@ Instead of reading complex technical reports, this tool utilizes a large languag
    
 <img width="770" height="424" alt="Screenshot 2025-09-14 140338" src="https://github.com/user-attachments/assets/56a0d040-035e-48af-9c45-bb349a864936" />
 
+1-- Intelligent Analysis: Uses a local (Offline) AI model to transform technical data into practical explanations and steps.
 
-    Intelligent Analysis: Uses a local (Offline) AI model to transform technical data into practical explanations and steps.
+2-- Multi-language Support: Ability to generate reports in Arabic or English.
 
-    Multi-language Support: Ability to generate reports in Arabic or English.
+3-- Professional Exporting: Option to export final reports as plain text or as formatted PDF files.
 
-    Professional Exporting: Option to export final reports as plain text or as formatted PDF files.
+4-- Works Offline: The core of the system (the AI engine) runs entirely on your server without needing to connect to any cloud services, ensuring data privacy and security.
 
-    Works Offline: The core of the system (the AI engine) runs entirely on your server without needing to connect to any cloud services, ensuring data privacy and security.
-
-    High Flexibility: Ability to analyze any agent and any check easily through the menu.
+5-- High Flexibility: Ability to analyze any agent and any check easily through the menu.
 
 </div> 
 # 📖 عن المشروع
@@ -97,25 +96,29 @@ The system is based on a simple architecture of several scripts working together
 1. Setup the Project / تجهيز المشروع
 
 # Clone the repository (or create a folder and place all scripts inside)
+```bash
 git clone https://github.com/Hazematiya2023/Wazuh-CSA-Bot.git
 
 
 cd Wazuh-CSA-Bot
 
 # Create a virtual environment
+```bash
 python3 -m venv ai_env
 
 # Activate the environment
+```bash
 source ai_env/bin/activate
 
 # Install all required libraries
+```bash
 pip install flask llama-cpp-python requests fpdf2 arabic_reshaper python-bidi
 
 
 2. Download the AI Model / تحميل نموذج الذكاء الاصطناعي
 
 Download a language model in GGUF format from sources like Hugging Face. We recommend Llama-3-8B-Instruct-Q4_K_M.gguf. You can download it directly using the following command:
-
+```bash
 wget "[https://huggingface.co/QuantFactory/Meta-Llama-3-8B-Instruct-GGUF/resolve/main/Meta-Llama-3-8B-Instruct.Q4_K_M.gguf](https://huggingface.co/QuantFactory/Meta-Llama-3-8B-Instruct-GGUF/resolve/main/Meta-Llama-3-8B-Instruct.Q4_K_M.gguf)" -O llama-3-8b-instruct.Q4_K_M.gguf
 
 
@@ -135,7 +138,7 @@ Open all helper scripts (CSA_generator.py, debug_sca.py, list_sca_checks.py) and
 
 # Section to modify in the scripts
 # --- SETTINGS ---
-WAZUH_API_URL = "[https://127.0.0.1:55000](https://127.0.0.1:55000)"
+WAZUH_API_URL = "[https://127.0.0.1:55000](https://127.0.0.1:55000)"    <<<<---- or enter the  IP for Wazuh Manager Server
 WAZUH_USER = "wazuh"
 WAZUH_PASSWORD = "YOUR_API_PASSWORD" # <--- Update your password here
 # ...
@@ -168,9 +171,11 @@ You will need two open terminal windows.
 In Terminal 1 (Start the Server):
 
 # Activate the environment
+```bash
 source ai_env/bin/activate
 
 # Run the AI engine and leave it running
+```bash
 python3 ai_engine.py
 
 
