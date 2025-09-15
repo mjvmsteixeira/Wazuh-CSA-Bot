@@ -33,9 +33,9 @@ Instead of reading complex technical reports, this tool utilizes a large languag
 
 
 # ✨ Features
-<div align="center">
+<div align="left">
     Interactive and Easy-to-Use Menu: A Text-based User Interface (TUI) makes interacting with the tool simple and direct.
-</div>    
+   
 <img width="770" height="424" alt="Screenshot 2025-09-14 140338" src="https://github.com/user-attachments/assets/56a0d040-035e-48af-9c45-bb349a864936" />
 
 
@@ -49,7 +49,7 @@ Instead of reading complex technical reports, this tool utilizes a large languag
 
     High Flexibility: Ability to analyze any agent and any check easily through the menu.
 
-
+</div> 
 # 📖 عن المشروع
 
 Wazuh SCA AI Analyst هي أداة قوية ومبتكرة مصممة لمساعدة محللي الأمن السيبراني ومديري الأنظمة على فهم ومعالجة نتائج فحص الإعدادات الأمنية (SCA) في منصة Wazuh.
