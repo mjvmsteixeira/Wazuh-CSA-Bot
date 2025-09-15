@@ -22,7 +22,7 @@ The remediation steps provided by the AI model . The Developer/Auther of this to
 
 <div align="center">
 <strong>
-<a href="#-about-the-project">English</a> | <a href="#-عن-المشروع">عربي</a>
+عن المشروع /About Project
 </strong>
 </div>
 # 📖 About the Project
