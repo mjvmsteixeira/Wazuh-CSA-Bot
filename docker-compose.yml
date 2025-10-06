@@ -1,0 +1,74 @@
+services:
+  # vLLM Service (Local LLM) - Only starts if AI_MODE is "local" or "mixed"
+  vllm:
+    image: vllm/vllm-openai:latest
+    container_name: wazuh-sca-vllm
+    profiles:
+      - local
+      - mixed
+    ports:
+      - "8001:8000"
+    volumes:
+      - ./models:/models
+    environment:
+      - MODEL_NAME=meta-llama/Meta-Llama-3-8B-Instruct
+      - TENSOR_PARALLEL_SIZE=1
+      - MAX_MODEL_LEN=4096
+    command: >
+      --model /models/Meta-Llama-3-8B-Instruct
+      --host 0.0.0.0
+      --port 8000
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    networks:
+      - wazuh-sca-network
+
+  # Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: wazuh-sca-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - WAZUH_API_URL=${WAZUH_API_URL:-https://127.0.0.1:55000}
+      - WAZUH_USER=${WAZUH_USER:-wazuh}
+      - WAZUH_PASSWORD=${WAZUH_PASSWORD}
+      - WAZUH_VERIFY_SSL=${WAZUH_VERIFY_SSL:-false}
+      - AI_MODE=${AI_MODE:-mixed}
+      - VLLM_API_URL=http://vllm:8000/v1
+      - VLLM_MODEL=meta-llama/Meta-Llama-3-8B-Instruct
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENAI_MODEL=${OPENAI_MODEL:-gpt-4}
+      - APP_ENV=${APP_ENV:-production}
+      - SECRET_KEY=${SECRET_KEY}
+    volumes:
+      - ./backend/reports:/app/reports
+    networks:
+      - wazuh-sca-network
+
+  # Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: wazuh-sca-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - wazuh-sca-network
+
+networks:
+  wazuh-sca-network:
+    driver: bridge
+
+volumes:
+  models:

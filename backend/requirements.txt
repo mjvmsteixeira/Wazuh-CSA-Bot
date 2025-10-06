@@ -1,0 +1,40 @@
+# FastAPI and ASGI server
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+pydantic==2.5.3
+pydantic-settings==2.1.0
+
+# HTTP client for Wazuh API
+httpx==0.26.0
+requests==2.31.0
+
+# AI/LLM integrations
+openai==1.10.0
+
+# PDF generation
+reportlab==4.0.9
+weasyprint==60.2
+
+# Database (optional)
+sqlalchemy==2.0.25
+alembic==1.13.1
+
+# Redis cache (optional)
+redis==5.0.1
+
+# Environment and config
+python-dotenv==1.0.0
+
+# Security
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+
+# Utilities
+python-multipart==0.0.6
+aiofiles==23.2.1
+
+# Development
+pytest==7.4.4
+pytest-asyncio==0.23.3
+black==23.12.1
+ruff==0.1.14
