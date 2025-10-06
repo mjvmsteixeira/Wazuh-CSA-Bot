@@ -1,247 +1,311 @@
-![CSA-Bot](https://github.com/user-attachments/assets/fdaa256a-2a1e-4a7b-8425-e84e70239425)
+![alt text](image-1.png)
 
-
-
-
+![alt text](image-2.png)
 
 # Wazuh SCA AI Analyst
 
-⚠️ Disclaimer
+![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)
+![License](https://img.shields.io/badge/license-MIT-green.svg)
 
-The remediation steps provided by the AI model . The Developer/Auther of this tool are not responsible for any direct or indirect damage resulting from the application of these solutions. Always test configurations in a test environment before deploying them to production.
+Análise inteligente de Security Configuration Assessment (SCA) do Wazuh usando AI local (vLLM) ou externa (OpenAI).
 
+> ⚠️ **Disclaimer**: As recomendações fornecidas pela AI são sugestões. Teste sempre em ambiente de desenvolvimento antes de produção.
 
-<div dir="rtl">⚠️ إخلاء مسؤولية</div>
+---
 
-<div dir="rtl">
-خطوات الحل المقدمة من نموذج الذكاء الاصطناعي , مؤلف ومطور هذه الأداة غير مسؤول عن أي ضرر مباشر أو غير مباشر ينتج عن تطبيق هذه الحلول. قم دائما باختبار الإعدادات في بيئة تجريبية قبل تطبيقها في بيئة الإنتاج.
-</div>
+## 🚀 Quick Start
 
-
-
-
-<div align="center">
-<strong>
-عن المشروع /About Project
-</strong>
-</div>
-
-# 📖 About the Project
-
-Wazuh SCA AI Analyst is a powerful and innovative tool designed to help cybersecurity analysts and system administrators understand and remediate Security Configuration Assessment (SCA) scan results within the Wazuh platform.
-
-Instead of reading complex technical reports, this tool utilizes a large language model (LLM) that runs completely offline to analyze these reports. Through a user-friendly interactive menu, it provides a simplified explanation of the problem, detailed remediation steps, and the ability to export these reports as PDF files in both English and Arabic.
-
-
-# ✨ Features
-<div align="align left">
-    Interactive and Easy-to-Use Menu: A Text-based User Interface (TUI) makes interacting with the tool simple and direct.
-   
-<img width="770" height="424" alt="Screenshot 2025-09-14 140338" src="https://github.com/user-attachments/assets/56a0d040-035e-48af-9c45-bb349a864936" />
-
-1-- Intelligent Analysis: Uses a local (Offline) AI model to transform technical data into practical explanations and steps.
-
-2-- Multi-language Support: Ability to generate reports in Arabic or English.
-
-3-- Professional Exporting: Option to export final reports as plain text or as formatted PDF files.
-
-4-- Works Offline: The core of the system (the AI engine) runs entirely on your server without needing to connect to any cloud services, ensuring data privacy and security.
-
-5-- High Flexibility: Ability to analyze any agent and any check easily through the menu.
-
-</div> 
-
-# 📖 About Project / عن الشروع
-<div align="align right">
-Wazuh SCA AI Analyst هي أداة قوية ومبتكرة مصممة لمساعدة محللي الأمن السيبراني ومديري الأنظمة على فهم ومعالجة نتائج فحص الإعدادات الأمنية (SCA) في منصة Wazuh.
-
-   *بدلا من قراءة التقارير الفنية المعقدة، تقوم هذه الأداة باستخدام نموذج لغوي كبير  (LLM) يعمل بشكل كامل بدون اتصال بالإنترنت لتحليل هذه التقارير. من خلال قائمة تفاعلية سهلة الاستخدام، تقدم الأداة شرحًا مبسطًا للمشكلة، وخطوات حل تفصيلية، مع إمكانية تصدير هذه التقارير بصيغة PDF باللغتين العربية والإنجليزية.
-   
-✨ المميزات
-
-    1-- قائمة تفاعلية سهلة الاستخدام: واجهة مستخدم نصية (TUI) تجعل التعامل مع الأداة بسيطًا ومباشرا.
-
-    2-- تحليل ذكي: يستخدم نموذج ذكاء اصطناعي محلي (Offline) لتحويل البيانات الفنية إلى شرح وخطوات عملية.
-
-    3-- دعم متعدد اللغات: إمكانية إنشاء التقارير باللغة العربية أو الإنجليزية.
-
-    4-- تصدير احترافي: إمكانية تصدير التقارير النهائية كنص عادي أو كملف PDF منسق.
-
-    5-- يعمل بدون إنترنت: قلب النظام (محرك الذكاء الاصطناعي) يعمل بشكل كامل على السيرفر دون الحاجة للاتصال بأي خدمة سحابية، مما يضمن خصوصية وأمان البيانات.
-
-    6-- مرونة عالية: إمكانية تحليل أي عميل (Agent) وأي فحص (Check) بسهولة من خلال القائمة.
-</div> 
-
-
-# If you need to know how to develop this tool:
-
-*The AI Backend (The Brain of the Tool): The core of the tool is an AI that works offline to maintain data privacy. I chose the Meta-Llama-3-8B-Instruct model in GGUF format for its excellent balance between power and size. Using the llama-cpp-python library, I was able to run it efficiently on a standard CPU. After that, I created a simple API around it using Flask to build the "AI Engine."
-
-*The Wazuh Connector (The Client): To get the data, I made another script (CSA_generator.py) that uses the requests library to connect to the Wazuh API, fetch SCA data for a specific agent, and send it to the smart engine.
-
-*The User Interface (The Menu): To make it user-friendly, I created an interactive command-line menu called (ai_menu.py) using Python's subprocess module to serve as the main user interface.
-
- Finally, I added professional touches like exporting reports as PDF files using the FPDF2 library.
-
-# 🛠️ How it Works / كيف يعمل؟
-
-The system is based on a simple architecture of several scripts working together:
-
-1-- ai_menu.py (Main Menu): The primary user interface. It displays the banner, handles user choices, and calls other scripts with the correct parameters.
-
-2-- CSA_generator.py (Report Generator): The client that connects to the Wazuh API to fetch scan data, sends it to the AI engine, and then prints or saves the report as a PDF.
-
-3-- ai_engine.py (AI Engine): The server that runs in the background. It loads the language model into memory and waits for analysis requests to process and respond to.
-
-*** Helper Scripts: Such as debug_sca.py and list_sca_checks.py to help with diagnostics and finding check IDs.
-
-# 📋 Requirements / المتطلبات
-1- A running Wazuh server.
-
-2- Python 3.8 or newer.
-
-3- The following libraries: flask, llama-cpp-python, requests, fpdf2, arabic_reshaper, python-bidi.
-
-4- A large language model in GGUF format (the project was tested with Llama 3 8B Instruct).
-
-5 -A font that supports Arabic installed on the server (like ttf-dejavu) to correctly render Arabic reports in PDF files.
-
-# 🚀 Installation and Usage / خطوات التثبيت والاستخدام
-1. Setup the Project / تجهيز المشروع
-
-# Clone the repository (or create a folder and place all scripts inside)
 ```bash
-git clone https://github.com/Hazematiya2023/Wazuh-CSA-Bot.git
-
+git clone https://github.com/mjvmsteixeira/Wazuh-CSA-Bot.git
 cd Wazuh-CSA-Bot
+make quickstart
+# Editar .env
+make up
 ```
 
-# Create a virtual environment
+**Acesso:** http://localhost:3000
+
+---
+
+## 📋 Requisitos
+
+- Docker & Docker Compose
+- Wazuh Manager acessível
+- **Para AI Local**: NVIDIA GPU + CUDA (~8GB VRAM)
+- **Para AI Externa**: OpenAI API Key
+
+---
+
+## ⚙️ Configuração
+
+### 1. Criar Ambiente
+
 ```bash
-python3 -m venv ai_env
+make setup-env
 ```
-# Activate the environment
+
+### 2. Editar `.env`
+
+**Wazuh (obrigatório):**
+```env
+WAZUH_API_URL=https://your-wazuh:55000
+WAZUH_USER=wazuh
+WAZUH_PASSWORD=your-password
+WAZUH_VERIFY_SSL=false
+```
+
+**AI Mode (escolher):**
+```env
+# Opção 1: Apenas Local (GPU necessária, sem custos)
+AI_MODE=local
+
+# Opção 2: Apenas OpenAI (sem GPU, com custos)
+AI_MODE=external
+OPENAI_API_KEY=sk-proj-...
+
+# Opção 3: Ambos (máxima flexibilidade)
+AI_MODE=mixed
+OPENAI_API_KEY=sk-proj-...
+```
+
+**App:**
+```env
+SECRET_KEY=change-in-production
+```
+
+### 3. Download Modelo (se local/mixed)
+
 ```bash
-source ai_env/bin/activate
+make download-model  # ~4.9GB
 ```
-# 1.Install all required libraries
+
+### 4. Iniciar
+
 ```bash
-pip install flask llama-cpp-python requests fpdf2 arabic_reshaper python-bidi
+make up
 ```
 
-# 2. Download the AI Model / تحميل نموذج الذكاء الاصطناعي
+---
 
-Download a language model in GGUF format from sources like Hugging Face. We recommend Llama-3-8B-Instruct-Q4_K_M.gguf. You can download it directly using the following command:
+## 🎯 Modos AI
+
+| Modo | vLLM Container | OpenAI | Quando Usar |
+|------|----------------|--------|-------------|
+| `local` | ✅ Obrigatório | ❌ | GPU disponível, sem custos API |
+| `external` | ❌ Não inicia | ✅ Obrigatório | Sem GPU, aceita custos |
+| `mixed` | ✅ Inicia | ✅ Opcional | Escolher por análise |
+
+---
+
+## 📦 Comandos
+
+### Setup
 ```bash
-wget "[https://huggingface.co/QuantFactory/Meta-Llama-3-8B-Instruct-GGUF/resolve/main/Meta-Llama-3-8B-Instruct.Q4_K_M.gguf](https://huggingface.co/QuantFactory/Meta-Llama-3-8B-Instruct-GGUF/resolve/main/Meta-Llama-3-8B-Instruct.Q4_K_M.gguf)" -O llama-3-8b-instruct.Q4_K_M.gguf
+make quickstart        # Setup interativo
+make setup-env         # Criar .env
+make download-model    # Download modelo (~4.9GB)
+make check-ai-mode     # Verificar configuração
 ```
 
-Place the downloaded model file in your project directory. Important: Open the ai_engine.py file and update the MODEL_PATH variable to point to the correct name of your model file.
-
-# Example inside ai_engine.py
-MODEL_PATH = "Meta-Llama-3-8B-Instruct.Q4_K_S.gguf" <<<---- Enter the acurate Path for modle file
-
-
-# 3. Configure the Settings / ضبط الإعدادات
-
-You need to update your Wazuh API password and the target SCA policy in the scripts.
-
-A. Update API Password:
-Open all helper scripts (CSA_generator.py, debug_sca.py, list_sca_checks.py) and update the WAZUH_PASSWORD variable.
-
- Section to modify in the scripts
- 
- --- SETTINGS ---
- 
-WAZUH_API_URL = "[https://127.0.0.1:55000](https://127.0.0.1:55000)"    <<<<---- or enter the  IP for Wazuh Manager Server
-
-WAZUH_USER = "wazuh"
-
-WAZUH_PASSWORD = "YOUR_API_PASSWORD"  <--- Update your password here
-
-
-B. Update Policy ID:
-The POLICY_ID variable determines which set of compliance checks to analyze. Open get_sca_report.py and list_sca_checks.py and change the POLICY_ID to match the operating system of the agent you are analyzing.
-
-# Section to modify in the scripts
-# --- SETTINGS ---
-# ...
-POLICY_ID = "cis_win2016" # <--- Change this value
-# ...
-
-
-Here are some common examples for POLICY_ID:
-
-   * cis_win2016 for Windows Server 2016
-
-   * cis_win2019 for Windows Server 2019
-
-   * cis_ubuntu20-04 for Ubuntu 20.04
-
-   * cis_rhel8 for Red Hat 8
-
-# 4. Run the Tool / تشغيل الأداة
-
-You will need two open terminal windows.
-
-In Terminal 1 (Start the Server):
-
-# Activate the environment
+### Operações
 ```bash
-source ai_env/bin/activate
+make up                # Iniciar
+make down              # Parar
+make restart           # Reiniciar
+make ps                # Estado
+make logs              # Ver logs
+make health            # Health check
 ```
-# Run the AI engine and leave it running
+
+### Limpeza
 ```bash
-python3 ai_engine.py
+make clean             # Limpar cache/containers
+make clean-all         # Limpar tudo + modelo
 ```
 
-In Terminal 2 (Start the Main Menu):
-
-# Activate the environment
+### Ajuda
 ```bash
-source ai_env/bin/activate
+make help              # Todos os comandos
+make info              # Info do projeto
 ```
-# Run the main menu
+
+---
+
+## 🏗️ Arquitetura
+
+```
+Frontend (React) → Backend (FastAPI) → { vLLM (Local)  }
+  :3000                 :8000            { OpenAI (API) }
+                          ↓
+                     Wazuh API
+                       :55000
+```
+
+## 📱 Uso
+
+1. Acesse http://localhost:3000
+2. Selecione Agent e Policy
+3. Escolha AI Provider (se mixed)
+4. Click "Analyze" nos checks falhados
+5. Veja análise e recomendações
+6. Exporte PDF (opcional)
+
+---
+
+## 🔌 API REST
+
+**Documentação interativa:** http://localhost:8000/docs
+
+### Principais Endpoints
+
+```python
+# Agentes
+GET  /api/agents
+GET  /api/agents/{id}
+
+# SCA
+GET  /api/sca/{agent_id}/policies
+GET  /api/sca/{agent_id}/checks/{policy_id}/failed
+
+# Análise
+POST /api/analysis
+POST /api/analysis/stream
+POST /api/analysis/batch
+
+# Relatórios
+POST /api/reports/pdf
+```
+
+---
+
+## 📁 Estrutura
+
+```
+Wazuh-CSA-Bot/
+├── backend/           # FastAPI
+│   ├── app/
+│   │   ├── api/       # Routes
+│   │   ├── services/  # AI + Wazuh
+│   │   ├── models/    # Schemas
+│   │   └── config.py
+│   └── Dockerfile
+├── frontend/          # React
+│   ├── src/
+│   │   ├── components/
+│   │   ├── pages/
+│   │   ├── services/
+│   │   └── i18n/      # PT/EN
+│   └── Dockerfile
+├── models/            # AI models
+├── docker-compose.yml
+├── Makefile
+└── .env
+```
+
+---
+
+## 🐛 Troubleshooting
+
+### vLLM não inicia
 ```bash
-python3 ai_menu.py
+nvidia-smi              # Verificar GPU
+make check-model        # Verificar modelo
+make logs-vllm          # Ver erros
 ```
 
+### Backend com erros
+```bash
+make check-ai-mode      # Validar config
+make logs-backend       # Ver logs
+make test-wazuh         # Testar Wazuh
+```
 
+### Porta ocupada
+```bash
+make down
+make clean
+make up
+```
 
-Now you can follow the on-screen instructions in the interactive menu to use the tool.
-# Example : for check Failed ID 16001
-<img width="908" height="980" alt="Screenshot 2025-09-07 122323" src="https://github.com/user-attachments/assets/6f3c7985-722c-4b95-92ec-1057ee4a371a" />
+### Reset completo
+```bash
+make clean-all
+make setup-env
+# Editar .env
+make download-model
+make up
+```
 
-# Example : for check Failed ID 16004
-<img width="892" height="889" alt="Screenshot 2025-09-08 143852" src="https://github.com/user-attachments/assets/5b13be6b-5fd3-4a11-a27d-d76671681480" />
+---
 
+## 🔐 Segurança
 
-also you can generate PDF file and it will be stored under the same folder , and you can transfer it using any sftp application to your PC.
+- ❌ Nunca commite `.env`
+- ✅ Use secrets fortes em produção
+- ✅ Configure SSL/TLS para Wazuh
+- ✅ Limite acesso às APIs
+- ✅ Revise permissões regularmente
 
-# This is example for PDF report generate by this tool:
+---
 
-<img width="756" height="554" alt="Screenshot 2025-09-11 104110" src="https://github.com/user-attachments/assets/624fd901-c2f1-4de0-adfe-8288b9cd0d45" />
+## 🎓 Políticas SCA Suportadas
 
+- Windows: `cis_win2016`, `cis_win2019`, `cis_win2022`
+- Ubuntu: `cis_ubuntu20-04`, `cis_ubuntu22-04`
+- RHEL: `cis_rhel8`, `cis_rhel9`
+- Outras políticas CIS
 
+---
 
+## 💻 Desenvolvimento
 
-<img width="968" height="533" alt="Screenshot 2025-09-14 003020" src="https://github.com/user-attachments/assets/e84339e1-a7c1-4f44-a797-b59248f34f79" />
+### Backend Local
+```bash
+cd backend
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+pip install -r requirements.txt
+uvicorn app.main:app --reload
+```
 
+### Frontend Local
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
+---
 
-<img width="1592" height="1016" alt="Screenshot 2025-09-14 005704" src="https://github.com/user-attachments/assets/1da91c12-ff19-479c-8720-fefd66c52ea5" />
+## 📄 Variáveis de Ambiente
 
+| Variável | Descrição | Default |
+|----------|-----------|---------|
+| `AI_MODE` | Modo AI: local/external/mixed | `mixed` |
+| `WAZUH_API_URL` | URL Wazuh API | `https://127.0.0.1:55000` |
+| `WAZUH_USER` | Utilizador Wazuh | `wazuh` |
+| `WAZUH_PASSWORD` | Password Wazuh | - |
+| `VLLM_API_URL` | URL vLLM service | `http://vllm:8000/v1` |
+| `OPENAI_API_KEY` | OpenAI API key | - |
+| `SECRET_KEY` | App secret key | - |
 
+---
 
-# ✍️ Author / المؤلف
+## 👤 Autores
 
-This tool was developed by Hazem Mohamed - Wazuh Ambassador in Egypt.
+**Tool Original:** [Hazem Mohamed](https://wazuh.com/ambassadors/hazem-mohamed/) - [Repo](https://github.com/Hazematiya2023/Wazuh-CSA-Bot)
 
-    Wazuh Ambassador Profile
-    https://wazuh.com/ambassadors/hazem-mohamed/ 
-    LinkedIn:
-    https://www.linkedin.com/in/hazem-mohamed-03742957/
+**Web Version:** [mjvmsteixeira](https://github.com/mjvmsteixeira)
 
-# 📜 License / الترخيص
+---
 
-This project is licensed under the MIT License. See the LICENSE file for more details.
+## 📧 Suporte
+
+- Issues: [GitHub Issues](https://github.com/mjvmsteixeira/Wazuh-CSA-Bot/issues)
+- Documentação: [Wiki](https://github.com/mjvmsteixeira/Wazuh-CSA-Bot/wiki)
+
+---
+
+## 📜 Licença
+
+MIT License - ver [LICENSE](LICENSE)

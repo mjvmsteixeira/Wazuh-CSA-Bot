@@ -1,0 +1,56 @@
+{
+  "app": {
+    "title": "Wazuh SCA AI Analyst",
+    "subtitle": "Security Configuration Assessment Analysis"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "settings": "Settings"
+  },
+  "dashboard": {
+    "selectAgent": "Select Wazuh Agent",
+    "selectAgentPlaceholder": "Search for an agent...",
+    "selectPolicy": "SCA Policy",
+    "failedChecks": "Failed Checks",
+    "noAgent": "Please select an agent to view checks",
+    "noChecks": "No failed checks found",
+    "checkId": "Check ID",
+    "title": "Title",
+    "result": "Result",
+    "actions": "Actions",
+    "analyze": "Analyze",
+    "analyzeSelected": "Analyze Selected",
+    "exportPDF": "Export PDF",
+    "selectChecks": "Select checks to analyze"
+  },
+  "analysis": {
+    "title": "AI Analysis",
+    "analyzing": "Analyzing...",
+    "selectProvider": "AI Provider",
+    "local": "Local LLM (vLLM)",
+    "openai": "OpenAI (ChatGPT)",
+    "copyReport": "Copy Report",
+    "downloadPDF": "Download PDF",
+    "close": "Close",
+    "error": "Analysis failed. Please try again."
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "aiProvider": "Default AI Provider",
+    "apiKeys": "API Keys",
+    "openaiKey": "OpenAI API Key",
+    "save": "Save Settings"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "search": "Search",
+    "filter": "Filter",
+    "export": "Export",
+    "download": "Download"
+  }
+}
