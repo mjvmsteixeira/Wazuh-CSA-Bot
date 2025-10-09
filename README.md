@@ -1,15 +1,41 @@
+![alt text](image.png)
 ![alt text](image-1.png)
-
 ![alt text](image-2.png)
+![alt text](image-3.png)
 
 # Wazuh SCA AI Analyst
 
-![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)
+![Version](https://img.shields.io/badge/version-3.0.0-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
+![AI](https://img.shields.io/badge/AI-vLLM%20%7C%20OpenAI-purple.svg)
+![Scripts](https://img.shields.io/badge/Remediation-Automated-green.svg)
 
-Análise inteligente de Security Configuration Assessment (SCA) do Wazuh usando AI local (vLLM) ou externa (OpenAI).
+**AI-powered SCA analysis** for Wazuh with automated remediation scripts and intelligent caching.
 
-> ⚠️ **Disclaimer**: As recomendações fornecidas pela AI são sugestões. Teste sempre em ambiente de desenvolvimento antes de produção.
+> ⚠️ **Disclaimer**: AI recommendations are suggestions. Always test in development before deploying to production.
+
+---
+
+## ✨ What's New in v3.0
+
+### 🔧 Automated Remediation Scripts
+- **AI-generated executable scripts** for each failed check (bash/PowerShell/Python)
+- **Terminal-style viewer** with macOS window controls (🔴 🟡 🟢)
+- **One-click download** — ready-to-run scripts
+- **Safety features**: Privilege detection, risk warnings, and validation commands
+
+### 🔗 Shared Cache System
+- **Cross-agent analysis reuse** — analyze once, use everywhere
+- **Smart caching**: Agent-specific + shared cache strategies
+- **Cost optimization**: Up to 98% reduction in AI API calls
+- **Visual indicators**: Purple badge shows “cached from another agent”
+
+### 🎨 Enhanced UI/UX
+- **Smart error modals** with zoom-in details and troubleshooting steps
+- **Professional script display** with syntax highlighting
+- **Improved performance** indicators and status monitoring
+
+📚 **[Full Changelog](CHANGELOG.md)** | 📖 **[Documentation](docs/)**
 
 ---
 
@@ -19,34 +45,34 @@ Análise inteligente de Security Configuration Assessment (SCA) do Wazuh usando 
 git clone https://github.com/mjvmsteixeira/Wazuh-CSA-Bot.git
 cd Wazuh-CSA-Bot
 make quickstart
-# Editar .env
+# Edit .env
 make up
 ```
 
-**Acesso:** http://localhost:3000
+**Access:** http://localhost:3000
 
 ---
 
-## 📋 Requisitos
+## 📋 Requirements
 
-- Docker & Docker Compose
-- Wazuh Manager acessível
-- **Para AI Local**: NVIDIA GPU + CUDA (~8GB VRAM)
-- **Para AI Externa**: OpenAI API Key
+- Docker & Docker Compose  
+- Accessible Wazuh Manager  
+- **For Local AI**: NVIDIA GPU + CUDA (~8GB VRAM)  
+- **For External AI**: OpenAI API Key  
 
 ---
 
-## ⚙️ Configuração
+## ⚙️ Configuration
 
-### 1. Criar Ambiente
+### 1. Create Environment
 
 ```bash
 make setup-env
 ```
 
-### 2. Editar `.env`
+### 2. Edit `.env`
 
-**Wazuh (obrigatório):**
+**Wazuh (required):**
 ```env
 WAZUH_API_URL=https://your-wazuh:55000
 WAZUH_USER=wazuh
@@ -54,16 +80,16 @@ WAZUH_PASSWORD=your-password
 WAZUH_VERIFY_SSL=false
 ```
 
-**AI Mode (escolher):**
+**AI Mode (choose one):**
 ```env
-# Opção 1: Apenas Local (GPU necessária, sem custos)
+# Option 1: Local only (GPU required, no costs)
 AI_MODE=local
 
-# Opção 2: Apenas OpenAI (sem GPU, com custos)
+# Option 2: OpenAI only (no GPU, API costs apply)
 AI_MODE=external
 OPENAI_API_KEY=sk-proj-...
 
-# Opção 3: Ambos (máxima flexibilidade)
+# Option 3: Mixed (maximum flexibility)
 AI_MODE=mixed
 OPENAI_API_KEY=sk-proj-...
 ```
@@ -73,13 +99,13 @@ OPENAI_API_KEY=sk-proj-...
 SECRET_KEY=change-in-production
 ```
 
-### 3. Download Modelo (se local/mixed)
+### 3. Download Model (for local/mixed modes)
 
 ```bash
 make download-model  # ~4.9GB
 ```
 
-### 4. Iniciar
+### 4. Start
 
 ```bash
 make up
@@ -87,98 +113,102 @@ make up
 
 ---
 
-## 🎯 Modos AI
+## 🎯 AI Modes
 
-| Modo | vLLM Container | OpenAI | Quando Usar |
-|------|----------------|--------|-------------|
-| `local` | ✅ Obrigatório | ❌ | GPU disponível, sem custos API |
-| `external` | ❌ Não inicia | ✅ Obrigatório | Sem GPU, aceita custos |
-| `mixed` | ✅ Inicia | ✅ Opcional | Escolher por análise |
+| Mode | vLLM Container | OpenAI | When to Use |
+|------|----------------|--------|--------------|
+| `local` | ✅ Required | ❌ | GPU available, no API costs |
+| `external` | ❌ Not started | ✅ Required | No GPU, accept API costs |
+| `mixed` | ✅ Started | ✅ Optional | Choose per analysis |
 
 ---
 
-## 📦 Comandos
+## 📦 Commands
 
 ### Setup
 ```bash
-make quickstart        # Setup interativo
-make setup-env         # Criar .env
-make download-model    # Download modelo (~4.9GB)
-make check-ai-mode     # Verificar configuração
+make quickstart        # Interactive setup
+make setup-env         # Create .env
+make download-model    # Download model (~4.9GB)
+make check-ai-mode     # Verify configuration
 ```
 
-### Operações
+### Operations
 ```bash
-make up                # Iniciar
-make down              # Parar
-make restart           # Reiniciar
-make ps                # Estado
-make logs              # Ver logs
+make up                # Start
+make down              # Stop
+make restart           # Restart
+make ps                # Status
+make logs              # View logs
 make health            # Health check
 ```
 
-### Limpeza
+### Cleanup
 ```bash
-make clean             # Limpar cache/containers
-make clean-all         # Limpar tudo + modelo
+make clean             # Remove cache/containers
+make clean-all         # Remove everything + model
 ```
 
-### Ajuda
+### Help
 ```bash
-make help              # Todos os comandos
-make info              # Info do projeto
+make help              # All commands
+make info              # Project info
 ```
 
 ---
 
-## 🏗️ Arquitetura
+## 🏗️ Architecture
 
 ```
-Frontend (React) → Backend (FastAPI) → { vLLM (Local)  }
+Frontend (React) → Backend (FastAPI) → { vLLM (Local) }
   :3000                 :8000            { OpenAI (API) }
                           ↓
                      Wazuh API
                        :55000
 ```
 
-## 📱 Uso
+## 🎯 Key Features
 
-1. Acesse http://localhost:3000
-2. Selecione Agent e Policy
-3. Escolha AI Provider (se mixed)
-4. Click "Analyze" nos checks falhados
-5. Veja análise e recomendações
-6. Exporte PDF (opcional)
+### Analysis & Reporting
+- ✅ **AI-powered analysis** using local (vLLM) or cloud (OpenAI) models
+- 📄 **Detailed reports** with context and remediation steps
+- 🌍 **Multi-language** support (Portuguese, English)
+- 📊 **PDF export** for compliance documentation
+- 📜 **Analysis history** with search and filtering
 
----
+### Automation & Scripts
+- 🔧 **Executable remediation scripts** (bash, PowerShell, Python)
+- 🖥️ **Terminal-style viewer** with syntax highlighting
+- ⚡ **One-click copy/download** for instant execution
+- ⚠️ **Safety metadata**: root requirements, estimated runtime, and risk level
 
-## 🔌 API REST
+### Performance & Caching
+- 🔗 **Shared cache** — reuse analyses across agents
+- ⚡ **Agent-specific cache** for repeated checks
+- 💾 **Persistent storage** in SQLite
+- 📈 **Cost optimization** — up to 98% fewer API calls
 
-**Documentação interativa:** http://localhost:8000/docs
-
-### Principais Endpoints
-
-```python
-# Agentes
-GET  /api/agents
-GET  /api/agents/{id}
-
-# SCA
-GET  /api/sca/{agent_id}/policies
-GET  /api/sca/{agent_id}/checks/{policy_id}/failed
-
-# Análise
-POST /api/analysis
-POST /api/analysis/stream
-POST /api/analysis/batch
-
-# Relatórios
-POST /api/reports/pdf
-```
+### User Experience
+- 🎨 **Modern React UI** with live updates
+- 🔍 **Smart error handling** with troubleshooting tips
+- 📊 **System status dashboard** for all services
+- 🏷️ **Visual indicators** for cache, provider, and analysis status
 
 ---
 
-## 📁 Estrutura
+## 📱 Usage
+
+1. Access http://localhost:3000  
+2. Select Wazuh Agent and SCA Policy  
+3. Choose AI Provider (if mixed mode)  
+4. Click **Analyze** on failed checks  
+5. View analysis, recommendations, and **remediation scripts**  
+6. Download scripts or export PDF reports  
+7. **Reuse analyses** automatically across similar checks  
+
+---
+
+## 📁 Structure
 
 ```
 Wazuh-CSA-Bot/
@@ -206,106 +236,89 @@ Wazuh-CSA-Bot/
 
 ## 🐛 Troubleshooting
 
-### vLLM não inicia
+### vLLM not starting
 ```bash
-nvidia-smi              # Verificar GPU
-make check-model        # Verificar modelo
-make logs-vllm          # Ver erros
+nvidia-smi              # Check GPU
+make check-model        # Verify model
+make logs-vllm          # View vLLM logs
 ```
 
-### Backend com erros
+### Backend issues
 ```bash
-make check-ai-mode      # Validar config
-make logs-backend       # Ver logs
-make test-wazuh         # Testar Wazuh
+make check-ai-mode      # Validate configuration
+make logs-backend       # View backend logs
+make test-wazuh         # Test Wazuh connection
 ```
 
-### Porta ocupada
+### Port already in use
 ```bash
 make down
 make clean
 make up
+# or
+make up-cache # using Redis
 ```
 
-### Reset completo
+### Full reset
 ```bash
 make clean-all
 make setup-env
-# Editar .env
+# Edit .env
 make download-model
 make up
+# or
+make up-cache # using Redis
 ```
 
 ---
 
-## 🔐 Segurança
+## 📈 Performance & Cost Savings
 
-- ❌ Nunca commite `.env`
-- ✅ Use secrets fortes em produção
-- ✅ Configure SSL/TLS para Wazuh
-- ✅ Limite acesso às APIs
-- ✅ Revise permissões regularmente
+### Shared Cache Benefits (v3.0)
 
----
+**Scenario**: 50 servers with identical SCA policy
 
-## 🎓 Políticas SCA Suportadas
+| Metric | Without Cache | With Shared Cache | Savings |
+|--------|---------------|-------------------|----------|
+| **Time** | 150 seconds | 8 seconds | **94% faster** ⚡ |
+| **AI API Calls** | 50 calls | 1 call | **98% fewer calls** 💰 |
+| **Response Time** | 3s per check | <100ms cached | **97% faster** 🚀 |
 
-- Windows: `cis_win2016`, `cis_win2019`, `cis_win2022`
-- Ubuntu: `cis_ubuntu20-04`, `cis_ubuntu22-04`
-- RHEL: `cis_rhel8`, `cis_rhel9`
-- Outras políticas CIS
+### Cache Strategy
 
----
+1. **Agent-specific cache** – highest priority, per-agent results  
+2. **Shared cache** – fallback, reuse from any agent with same check  
+3. **TTL-based expiration** – configurable freshness (default: 24h)
 
-## 💻 Desenvolvimento
+### Visual Indicators
 
-### Backend Local
-```bash
-cd backend
-python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
-pip install -r requirements.txt
-uvicorn app.main:app --reload
-```
-
-### Frontend Local
-```bash
-cd frontend
-npm install
-npm run dev
-```
+- 🔵 **Agent-specific cache** – same agent, same check  
+- 🟣 **Shared cache** – different agent, same check (with badge)  
+- 🆕 **New analysis** – no cache, fresh AI generation  
 
 ---
 
-## 📄 Variáveis de Ambiente
+## 🎓 Supported SCA Policies
 
-| Variável | Descrição | Default |
-|----------|-----------|---------|
-| `AI_MODE` | Modo AI: local/external/mixed | `mixed` |
-| `WAZUH_API_URL` | URL Wazuh API | `https://127.0.0.1:55000` |
-| `WAZUH_USER` | Utilizador Wazuh | `wazuh` |
-| `WAZUH_PASSWORD` | Password Wazuh | - |
-| `VLLM_API_URL` | URL vLLM service | `http://vllm:8000/v1` |
-| `OPENAI_API_KEY` | OpenAI API key | - |
-| `SECRET_KEY` | App secret key | - |
+The Wazuh Security Configuration Assessment (SCA) module performs scans to determine if monitored endpoints meet secure configuration and hardening policies. These scans assess the endpoint configuration using policy files. These policy files contain rules that serve as a benchmark for the configurations that exist on the monitored endpoint.
+[read more](https://documentation.wazuh.com/current/compliance/nist/configuration-assessment.html)
 
 ---
 
-## 👤 Autores
+## 👤 Authors
 
-**Tool Original:** [Hazem Mohamed](https://wazuh.com/ambassadors/hazem-mohamed/) - [Repo](https://github.com/Hazematiya2023/Wazuh-CSA-Bot)
-
-**Web Version:** [mjvmsteixeira](https://github.com/mjvmsteixeira)
-
----
-
-## 📧 Suporte
-
-- Issues: [GitHub Issues](https://github.com/mjvmsteixeira/Wazuh-CSA-Bot/issues)
-- Documentação: [Wiki](https://github.com/mjvmsteixeira/Wazuh-CSA-Bot/wiki)
+**Original Tool:** [Hazem Mohamed](https://wazuh.com/ambassadors/hazem-mohamed/) - [Repo](https://github.com/Hazematiya2023/Wazuh-CSA-Bot)
+**Fork:** [@mjvmst](https://wazuh.com/ambassadors/marco-teixeira/) - [Fork](https://github.com/mjvmsteixeira)
 
 ---
 
-## 📜 Licença
+## 📧 Support
 
-MIT License - ver [LICENSE](LICENSE)
+- Issues: [GitHub Issues](https://github.com/mjvmsteixeira/Wazuh-CSA-Bot/issues)  
+- Documentation: [Wiki](https://github.com/mjvmsteixeira/Wazuh-CSA-Bot/wiki)
+
+---
+
+## 📜 License
+
+MIT License — see [LICENSE](LICENSE)

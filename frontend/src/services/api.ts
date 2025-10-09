@@ -31,6 +31,7 @@ export interface SCACheck {
   rationale?: string;
   remediation?: string;
   result: string;
+  compliance?: Array<{ key: string; value: string }>;
 }
 
 export interface AnalysisRequest {
@@ -41,11 +42,22 @@ export interface AnalysisRequest {
   ai_provider: 'vllm' | 'openai';
 }
 
+export interface RemediationScript {
+  script_content: string;
+  script_language: 'bash' | 'powershell' | 'python';
+  validation_command: string;
+  estimated_duration?: string;
+  requires_root: boolean;
+  risks: string[];
+}
+
 export interface AnalysisResponse {
   check_id: number;
   report: string;
+  remediation_script?: RemediationScript;
   ai_provider: string;
   language: string;
+  cached_from_agent?: string;
 }
 
 export interface PDFRequest {
@@ -58,6 +70,40 @@ export interface PDFRequest {
 export interface PDFResponse {
   filename: string;
   download_url: string;
+}
+
+export interface AnalysisHistory {
+  id: string;
+  agent_id: string;
+  agent_name: string;
+  policy_id: string;
+  check_id: number;
+  check_title: string;
+  check_description?: string;
+  analysis_date: string;
+  language: 'pt' | 'en';
+  ai_provider: 'vllm' | 'openai';
+  report_text: string;
+  remediation_script?: RemediationScript;
+  status: 'pending' | 'completed' | 'failed';
+  error_message?: string;
+  execution_time_seconds?: number;
+}
+
+export interface AnalysisHistoryListResponse {
+  analyses: AnalysisHistory[];
+  total: number;
+  limit: number;
+  offset: number;
+}
+
+export interface CacheStats {
+  total_analyses: number;
+  completed: number;
+  failed: number;
+  cached_valid: number;
+  cache_enabled: boolean;
+  cache_ttl_hours: number;
 }
 
 // API functions
@@ -111,6 +157,11 @@ export const api = {
     return response.data;
   },
 
+  getSystemStatus: async (): Promise<any> => {
+    const response = await apiClient.get('/analysis/system-status');
+    return response.data;
+  },
+
   // PDF Reports
   generatePDF: async (request: PDFRequest): Promise<PDFResponse> => {
     const response = await apiClient.post('/reports/pdf', request);
@@ -119,6 +170,54 @@ export const api = {
 
   downloadPDF: (filename: string): string => {
     return `${API_BASE_URL}/reports/download/${filename}`;
+  },
+
+  // History
+  getAgentHistory: async (
+    agentId: string,
+    limit: number = 50,
+    offset: number = 0,
+    status?: 'pending' | 'completed' | 'failed'
+  ): Promise<AnalysisHistoryListResponse> => {
+    const params: any = { limit, offset };
+    if (status) params.status = status;
+    const response = await apiClient.get(`/history/agent/${agentId}`, { params });
+    return response.data;
+  },
+
+  getCheckHistory: async (
+    agentId: string,
+    checkId: number,
+    limit: number = 20
+  ): Promise<AnalysisHistoryListResponse> => {
+    const response = await apiClient.get(`/history/check/${agentId}/${checkId}`, {
+      params: { limit },
+    });
+    return response.data;
+  },
+
+  getAnalysisById: async (analysisId: string): Promise<AnalysisHistory> => {
+    const response = await apiClient.get(`/history/${analysisId}`);
+    return response.data;
+  },
+
+  deleteAnalysis: async (analysisId: string): Promise<void> => {
+    await apiClient.delete(`/history/${analysisId}`);
+  },
+
+  getCacheStats: async (): Promise<CacheStats> => {
+    const response = await apiClient.get('/history/stats/cache');
+    return response.data;
+  },
+
+  getRecentAnalyses: async (
+    hours: number = 24,
+    limit: number = 100
+  ): Promise<AnalysisHistoryListResponse> => {
+    const response = await apiClient.get('/history/recent', {
+      params: { hours, limit },
+    });
+    return response.data;
   },
 };
 

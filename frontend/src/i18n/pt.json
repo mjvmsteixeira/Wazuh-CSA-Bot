@@ -11,6 +11,7 @@
     "selectAgent": "Selecionar Agente Wazuh",
     "selectAgentPlaceholder": "Procurar agente...",
     "selectPolicy": "Política SCA",
+    "scaPolicy": "Política SCA Ativa",
     "failedChecks": "Verificações Falhadas",
     "noAgent": "Por favor, selecione um agente para ver as verificações",
     "noChecks": "Nenhuma verificação falhada encontrada",

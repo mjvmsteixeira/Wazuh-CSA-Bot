@@ -3,9 +3,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.routes import agents, sca, analysis, reports
+from app.api.routes import agents, sca, analysis, reports, history
 from app.config import settings
 from app.utils.logger import logger
+from app.db.session import init_db
 
 # Create FastAPI app
 app = FastAPI(
@@ -30,6 +31,7 @@ app.include_router(agents.router, prefix="/api")
 app.include_router(sca.router, prefix="/api")
 app.include_router(analysis.router, prefix="/api")
 app.include_router(reports.router, prefix="/api")
+app.include_router(history.router, prefix="/api")
 
 
 @app.get("/")
@@ -54,6 +56,16 @@ async def startup_event():
     logger.info("Starting Wazuh SCA AI Analyst API")
     logger.info(f"Environment: {settings.app_env}")
     logger.info(f"vLLM API: {settings.vllm_api_url}")
+
+    # Initialize database
+    try:
+        init_db()
+        logger.info("✅ Database initialized successfully")
+        logger.info(f"📊 Analysis cache: {'ENABLED' if settings.enable_analysis_cache else 'DISABLED'}")
+        if settings.enable_analysis_cache:
+            logger.info(f"⏱️  Cache TTL: {settings.analysis_cache_ttl_hours} hours")
+    except Exception as e:
+        logger.error(f"❌ Failed to initialize database: {e}")
 
 
 @app.on_event("shutdown")

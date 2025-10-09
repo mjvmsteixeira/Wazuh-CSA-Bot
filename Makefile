@@ -1,9 +1,9 @@
-.PHONY: help install setup dev build up down logs clean clean-all \
+.PHONY: help install setup dev build rebuild up down logs clean clean-all \
         quickstart setup-env check-ai-mode check-model remove-model \
-        restart restart-backend restart-frontend restart-vllm \
-        ps status logs-backend logs-frontend logs-vllm health test-wazuh info \
-        dev-backend dev-frontend shell-backend shell-frontend shell-vllm \
-        lint format download-model build
+        restart restart-backend restart-frontend restart-vllm restart-redis \
+        ps status logs-backend logs-frontend logs-vllm logs-redis health test-wazuh info \
+        dev-backend dev-frontend shell-backend shell-frontend shell-vllm shell-redis \
+        lint format download-model build up-cache cache-enable cache-disable cache-clear cache-stats
 
 # ============================================================================
 # Shell + echo
@@ -79,19 +79,78 @@ quickstart: ## 🔧 Setup completo interativo (recomendado para primeira vez)
 	@$(ECHO) "$(CYAN)║$(RESET)  $(BOLD)🚀 Quick Start - Wazuh SCA AI Analyst$(RESET)                      $(CYAN)║$(RESET)"
 	@$(ECHO) "$(CYAN)╚══════════════════════════════════════════════════════════════════╝$(RESET)"
 	@$(ECHO) ""
-	@$(ECHO) "$(BOLD)Passo 1/4:$(RESET) Criar ficheiro .env..."
+	@$(ECHO) "$(BOLD)Passo 1/6:$(RESET) Criar ficheiro .env..."
 	@make setup-env
 	@$(ECHO) ""
-	@$(ECHO) "$(BOLD)Passo 2/4:$(RESET) Verificar configuração AI..."
+	@$(ECHO) "$(BOLD)Passo 2/6:$(RESET) Verificar configuração AI..."
 	@make check-ai-mode
 	@$(ECHO) ""
-	@$(ECHO) "$(BOLD)Passo 3/4:$(RESET) Download do modelo AI"
-	@read -p "$(YELLOW)Download modelo Llama 3 (~4.9GB)? [y/N]$(RESET) " -n 1 -r; \
-	$(ECHO) ""; \
-	if [[ $$REPLY =~ ^[Yy]$$ ]]; then \
-		make download-model; \
+	@$(ECHO) "$(BOLD)Passo 3/6:$(RESET) Configurar Cache Redis"
+	@REDIS_CACHE=$$(grep "^ENABLE_REDIS_CACHE=" .env | cut -d '=' -f2 | tr -d ' \r\n'); \
+	if [ -z "$$REDIS_CACHE" ]; then \
+		read -p "$(YELLOW)Habilitar Redis cache para melhor performance? [Y/n]$(RESET) " -n 1 -r; \
+		$(ECHO) ""; \
+		if [[ ! $$REPLY =~ ^[Nn]$$ ]]; then \
+			make cache-enable; \
+		else \
+			$(ECHO) "$(YELLOW)⚠️  Redis cache desabilitado. Use 'make cache-enable' para habilitar.$(RESET)"; \
+		fi; \
 	else \
-		$(ECHO) "$(YELLOW)⚠️  Modelo não transferido. Use 'make download-model' mais tarde.$(RESET)"; \
+		if [ "$$REDIS_CACHE" = "true" ]; then \
+			$(ECHO) "$(GREEN)✓$(RESET) Redis cache: $(GREEN)habilitado$(RESET) (já configurado em .env)"; \
+			$(ECHO) "$(YELLOW)⚠️  Execute 'make up-cache' para iniciar com Redis$(RESET)"; \
+		else \
+			$(ECHO) "$(YELLOW)⚠️$(RESET)  Redis cache: $(YELLOW)desabilitado$(RESET) (já configurado em .env)"; \
+		fi; \
+	fi
+	@$(ECHO) ""
+	@$(ECHO) "$(BOLD)Passo 4/6:$(RESET) Configurar Auto-download de Modelo"
+	@AI_MODE=$$(grep "^AI_MODE=" .env | cut -d '=' -f2 | tr -d ' \r\n'); \
+	if [ "$$AI_MODE" = "external" ]; then \
+		$(ECHO) "$(BLUE)ℹ$(RESET)  Modo external: download de modelo não necessário"; \
+		sed -i.bak 's/AUTO_DOWNLOAD_MODEL=.*/AUTO_DOWNLOAD_MODEL=false/' .env && rm -f .env.bak; \
+	else \
+		AUTO_DL=$$(grep "^AUTO_DOWNLOAD_MODEL=" .env | cut -d '=' -f2 | tr -d ' \r\n'); \
+		if [ -z "$$AUTO_DL" ]; then \
+			read -p "$(YELLOW)Fazer download automático do modelo AI? [Y/n]$(RESET) " -n 1 -r; \
+			$(ECHO) ""; \
+			if [[ ! $$REPLY =~ ^[Nn]$$ ]]; then \
+				sed -i.bak 's/AUTO_DOWNLOAD_MODEL=.*/AUTO_DOWNLOAD_MODEL=true/' .env && rm -f .env.bak; \
+				$(ECHO) "$(GREEN)✅ Auto-download habilitado$(RESET)"; \
+			else \
+				sed -i.bak 's/AUTO_DOWNLOAD_MODEL=.*/AUTO_DOWNLOAD_MODEL=false/' .env && rm -f .env.bak; \
+				$(ECHO) "$(YELLOW)⚠️  Auto-download desabilitado$(RESET)"; \
+			fi; \
+		else \
+			if [ "$$AUTO_DL" = "true" ]; then \
+				$(ECHO) "$(GREEN)✓$(RESET) Auto-download: $(GREEN)habilitado$(RESET) (já configurado em .env)"; \
+			else \
+				$(ECHO) "$(YELLOW)⚠️$(RESET)  Auto-download: $(YELLOW)desabilitado$(RESET) (já configurado em .env)"; \
+			fi; \
+		fi; \
+	fi
+	@$(ECHO) ""
+	@$(ECHO) "$(BOLD)Passo 5/6:$(RESET) Verificar configuração de modelo AI"
+	@AI_MODE=$$(grep "^AI_MODE=" .env | cut -d '=' -f2 | tr -d ' \r\n'); \
+	AUTO_DL=$$(grep "^AUTO_DOWNLOAD_MODEL=" .env | cut -d '=' -f2 | tr -d ' \r\n'); \
+	if [ "$$AI_MODE" = "local" ] || [ "$$AI_MODE" = "mixed" ]; then \
+		if [ "$$AUTO_DL" = "true" ]; then \
+			$(ECHO) "$(GREEN)✓$(RESET) Auto-download habilitado - Modelo será baixado automaticamente no primeiro start"; \
+		else \
+			$(ECHO) "$(YELLOW)⚠️$(RESET) Auto-download desabilitado - Modelo deve ser baixado manualmente"; \
+			$(ECHO) "   Use: $(GREEN)make download-model$(RESET)"; \
+		fi; \
+	else \
+		$(ECHO) "$(BLUE)ℹ$(RESET)  Modo external: download de modelo não necessário"; \
+	fi
+	@$(ECHO) ""
+	@$(ECHO) "$(BOLD)Passo 6/6:$(RESET) Build das imagens Docker"
+	@read -p "$(YELLOW)Fazer build das imagens agora? [Y/n]$(RESET) " -n 1 -r; \
+	$(ECHO) ""; \
+	if [[ ! $$REPLY =~ ^[Nn]$$ ]]; then \
+		make build; \
+	else \
+		$(ECHO) "$(YELLOW)⚠️  Build não executado. Use 'make build' para construir as imagens.$(RESET)"; \
 	fi
 	@$(ECHO) ""
 	@$(ECHO) "$(GREEN)╔══════════════════════════════════════════════════════════════════╗$(RESET)"
@@ -100,8 +159,13 @@ quickstart: ## 🔧 Setup completo interativo (recomendado para primeira vez)
 	@$(ECHO) ""
 	@$(ECHO) "$(BOLD)Próximos passos:$(RESET)"
 	@$(ECHO) "  $(CYAN)1.$(RESET) Editar $(YELLOW).env$(RESET) com suas credenciais Wazuh"
-	@$(ECHO) "  $(CYAN)2.$(RESET) Iniciar serviços: $(GREEN)make up$(RESET)"
+	@$(ECHO) "  $(CYAN)2.$(RESET) Iniciar serviços: $(GREEN)make up$(RESET) $(YELLOW)(ou$(RESET) $(GREEN)make up-cache$(RESET) $(YELLOW)com Redis)$(RESET)"
 	@$(ECHO) "  $(CYAN)3.$(RESET) Aceder à aplicação: $(BLUE)http://localhost:3000$(RESET)"
+	@$(ECHO) ""
+	@$(ECHO) "$(BOLD)💡 Comandos úteis:$(RESET)"
+	@$(ECHO) "  $(GREEN)make info$(RESET)          → Ver informação do sistema"
+	@$(ECHO) "  $(GREEN)make health$(RESET)        → Verificar saúde dos serviços"
+	@$(ECHO) "  $(GREEN)make rebuild$(RESET)       → Reconstruir imagens Docker"
 	@$(ECHO) ""
 
 setup-env: ## 🔧 Criar ficheiro .env a partir do exemplo
@@ -231,6 +295,14 @@ build: ## 🐳 Construir imagens Docker
 	@docker-compose build
 	@$(ECHO) "$(GREEN)✅ Build completo!$(RESET)"
 
+rebuild: ## 🐳 Reconstruir imagens Docker (sem cache)
+	@$(ECHO) "$(CYAN)🔨 A reconstruir imagens Docker (sem cache)...$(RESET)"
+	@$(ECHO) "$(YELLOW)⚠️  Isto pode demorar vários minutos$(RESET)"
+	@docker-compose build --no-cache
+	@$(ECHO) "$(GREEN)✅ Rebuild completo!$(RESET)"
+	@$(ECHO) ""
+	@$(ECHO) "$(BOLD)Próximo passo:$(RESET) $(GREEN)make down$(RESET) && $(GREEN)make up$(RESET)"
+
 up: ## 🐳 Iniciar todos os serviços
 	@if [ ! -f .env ]; then \
 		$(ECHO) "$(RED)❌ Ficheiro .env não encontrado!$(RESET)"; \
@@ -284,9 +356,32 @@ up: ## 🐳 Iniciar todos os serviços
 	@$(ECHO) "     Health check:$(GREEN)make health$(RESET)"
 	@$(ECHO) ""
 
+up-cache: ## 🐳 Iniciar serviços COM Redis cache
+	@if [ ! -f .env ]; then \
+		$(ECHO) "$(RED)❌ Ficheiro .env não encontrado!$(RESET)"; \
+		$(ECHO) "   Execute: $(GREEN)make setup-env$(RESET)"; \
+		exit 1; \
+	fi
+	@$(ECHO) ""
+	@$(ECHO) "$(CYAN)╔══════════════════════════════════════════════════════════════════╗$(RESET)"
+	@$(ECHO) "$(CYAN)║$(RESET)  $(BOLD)🚀 A Iniciar com Redis Cache$(RESET)                                $(CYAN)║$(RESET)"
+	@$(ECHO) "$(CYAN)╚══════════════════════════════════════════════════════════════════╝$(RESET)"
+	@$(ECHO) ""
+	@AI_MODE=$$(grep "^AI_MODE=" .env | cut -d '=' -f2 | tr -d ' \r\n'); \
+	$(ECHO) "  $(BOLD)Modo AI:$(RESET) $(MAGENTA)$$AI_MODE$(RESET)"; \
+	$(ECHO) "  $(BOLD)Redis:$(RESET) $(GREEN)Habilitado$(RESET)"; \
+	if [ "$$AI_MODE" = "local" ] || [ "$$AI_MODE" = "mixed" ]; then \
+		COMPOSE_PROFILES=$$AI_MODE,cache docker-compose up -d; \
+	else \
+		COMPOSE_PROFILES=cache docker-compose up -d; \
+	fi
+	@$(ECHO) ""
+	@$(ECHO) "$(GREEN)✅ Serviços iniciados com Redis cache!$(RESET)"
+	@$(ECHO) "   Verifique: $(GREEN)make health$(RESET)"
+
 down: ## 🐳 Parar todos os serviços
 	@$(ECHO) "$(YELLOW)🛑 A parar serviços...$(RESET)"
-	@docker-compose down
+	@docker-compose --profile "*" down
 	@$(ECHO) "$(GREEN)✅ Serviços parados!$(RESET)"
 
 restart: ## 🐳 Reiniciar todos os serviços
@@ -308,6 +403,11 @@ restart-vllm: ## 🐳 Reiniciar apenas vLLM
 	@$(ECHO) "$(CYAN)🔄 A reiniciar vLLM...$(RESET)"
 	@docker-compose restart vllm
 	@$(ECHO) "$(GREEN)✅ vLLM reiniciado!$(RESET)"
+
+restart-redis: ## 🐳 Reiniciar apenas Redis
+	@$(ECHO) "$(CYAN)🔄 A reiniciar Redis...$(RESET)"
+	@docker-compose restart redis
+	@$(ECHO) "$(GREEN)✅ Redis reiniciado!$(RESET)"
 
 ps: ## 🐳 Mostrar estado dos serviços
 	@$(ECHO) "$(CYAN)📊 Estado dos Serviços:$(RESET)"
@@ -335,6 +435,10 @@ logs-vllm: ## 📋 Ver logs do vLLM
 	@$(ECHO) "$(CYAN)📋 vLLM logs (Ctrl+C para sair)...$(RESET)"
 	@docker-compose logs -f vllm
 
+logs-redis: ## 📋 Ver logs do Redis
+	@$(ECHO) "$(CYAN)📋 Redis logs (Ctrl+C para sair)...$(RESET)"
+	@docker-compose logs -f redis
+
 # ============================================================================
 # 🏥 Health Checks & Diagnósticos
 # ============================================================================
@@ -358,6 +462,16 @@ health: ## 🏥 Verificar saúde dos serviços
 	@$(ECHO) "$(BOLD)vLLM (se ativo):$(RESET)"
 	@curl -s http://localhost:8001/health 2>/dev/null | jq . 2>/dev/null || $(ECHO) "  $(YELLOW)⚠️  Não ativo ou não responde$(RESET)"
 	@$(ECHO) ""
+	@$(ECHO) "$(BOLD)Redis (se ativo):$(RESET)"
+	@REDIS_STATUS=$$(docker-compose exec redis redis-cli PING 2>/dev/null); \
+	if [ "$$REDIS_STATUS" = "PONG" ]; then \
+		$(ECHO) "  $(GREEN)✅ Online$(RESET)"; \
+		CACHE_KEYS=$$(docker-compose exec redis redis-cli DBSIZE 2>/dev/null | grep -o '[0-9]*'); \
+		$(ECHO) "  $(CYAN)Chaves em cache: $$CACHE_KEYS$(RESET)"; \
+	else \
+		$(ECHO) "  $(YELLOW)⚠️  Não ativo ou não responde$(RESET)"; \
+	fi
+	@$(ECHO) ""
 
 test-wazuh: ## 🏥 Testar conexão com Wazuh API
 	@$(ECHO) "$(CYAN)🔗 A testar conexão Wazuh...$(RESET)"
@@ -373,15 +487,20 @@ info: ## 🏥 Mostrar informação do projeto
 	@$(ECHO) "   Backend:  $(CYAN)FastAPI$(RESET) (Python 3.11+)"
 	@$(ECHO) "   Frontend: $(CYAN)React + TypeScript + Vite$(RESET)"
 	@$(ECHO) "   AI:       $(CYAN)vLLM (Llama 3) + OpenAI$(RESET)"
+	@$(ECHO) "   Cache:    $(CYAN)Redis 7$(RESET) (opcional)"
 	@$(ECHO) ""
 	@if [ -f .env ]; then \
-		AI_MODE=$$(grep "^AI_MODE=" .env | cut -d '=' -f2 | tr -d ' '); \
+		AI_MODE=$$(grep "^AI_MODE=" .env | cut -d '=' -f2 | tr -d ' \r\n'); \
+		REDIS_CACHE=$$(grep "^ENABLE_REDIS_CACHE=" .env | cut -d '=' -f2 | tr -d ' \r\n'); \
+		AUTO_DL=$$(grep "^AUTO_DOWNLOAD_MODEL=" .env | cut -d '=' -f2 | tr -d ' \r\n'); \
 		$(ECHO) "$(BOLD)⚙️  Configuração:$(RESET)"; \
-		$(ECHO) "   AI_MODE: $(MAGENTA)$$AI_MODE$(RESET)"; \
+		$(ECHO) "   AI_MODE:           $(MAGENTA)$$AI_MODE$(RESET)"; \
+		$(ECHO) "   Redis Cache:       $$(if [ \"$$REDIS_CACHE\" = \"true\" ]; then echo \"$(GREEN)✅ Habilitado$(RESET)\"; else echo \"$(YELLOW)⚠️  Desabilitado$(RESET)\"; fi)"; \
+		$(ECHO) "   Auto-download:     $$(if [ \"$$AUTO_DL\" = \"true\" ]; then echo \"$(GREEN)✅ Sim$(RESET)\"; else echo \"$(YELLOW)❌ Não$(RESET)\"; fi)"; \
 		if [ -d "models" ] && [ -n "$$(ls -A models 2>/dev/null)" ]; then \
-			$(ECHO) "   Modelo:  $(GREEN)✅ Transferido$(RESET)"; \
+			$(ECHO) "   Modelo AI:         $(GREEN)✅ Transferido$(RESET)"; \
 		else \
-			$(ECHO) "   Modelo:  $(RED)❌ Não encontrado$(RESET)"; \
+			$(ECHO) "   Modelo AI:         $(RED)❌ Não encontrado$(RESET)"; \
 		fi; \
 	else \
 		$(ECHO) "$(YELLOW)⚠️  Ficheiro .env não encontrado$(RESET)"; \
@@ -401,16 +520,41 @@ info: ## 🏥 Mostrar informação do projeto
 # ============================================================================
 # 🧹 Limpeza & Manutenção
 # ============================================================================
-clean: ## 🧹 Limpar containers e cache
+clean: ## 🧹 Limpar containers, volumes e cache
 	@$(ECHO) "$(YELLOW)🧹 A limpar...$(RESET)"
-	@docker-compose down -v
+	@$(ECHO) ""
+	@$(ECHO) "  $(CYAN)→$(RESET) A parar containers..."
+	@docker-compose --profile "*" down -v 2>/dev/null || true
+	@$(ECHO) "  $(CYAN)→$(RESET) A limpar volumes Docker..."
+	@docker volume rm wazuh-csa-bot_redis-data 2>/dev/null || true
+	@docker volume rm wazuh-csa-bot_models 2>/dev/null || true
+	@$(ECHO) "  $(CYAN)→$(RESET) A limpar cache Python..."
 	@rm -rf backend/__pycache__ backend/**/__pycache__ 2>/dev/null || true
-	@rm -rf frontend/node_modules frontend/dist 2>/dev/null || true
+	@$(ECHO) "  $(CYAN)→$(RESET) A limpar build frontend..."
+	@rm -rf frontend/dist 2>/dev/null || true
+	@$(ECHO) "  $(CYAN)→$(RESET) A limpar relatórios PDF..."
 	@rm -rf backend/reports/*.pdf 2>/dev/null || true
+	@$(ECHO) ""
 	@$(ECHO) "$(GREEN)✅ Limpeza completa!$(RESET)"
+	@$(ECHO) "   $(YELLOW)Nota: node_modules preservado (use 'make clean-all' para remover)$(RESET)"
 
-clean-all: clean remove-model ## 🧹 Limpeza total (inclui modelo AI)
+clean-all: clean remove-model ## 🧹 Limpeza total (inclui modelo AI e dependências)
+	@$(ECHO) ""
+	@$(ECHO) "  $(CYAN)→$(RESET) A remover node_modules..."
+	@rm -rf frontend/node_modules 2>/dev/null || true
+	@$(ECHO) ""
 	@$(ECHO) "$(GREEN)✅ Limpeza total completa!$(RESET)"
+	@$(ECHO) ""
+	@$(ECHO) "$(BOLD)Espaço libertado:$(RESET)"
+	@$(ECHO) "  ✓ Containers Docker parados"
+	@$(ECHO) "  ✓ Volumes Docker removidos (Redis + Models)"
+	@$(ECHO) "  ✓ Cache Python removido"
+	@$(ECHO) "  ✓ Build frontend removido"
+	@$(ECHO) "  ✓ Relatórios PDF removidos"
+	@$(ECHO) "  ✓ Modelo AI removido (~4.9GB)"
+	@$(ECHO) "  ✓ node_modules removido"
+	@$(ECHO) ""
+	@$(ECHO) "$(YELLOW)Para recomeçar:$(RESET) $(GREEN)make quickstart$(RESET)"
 
 # ============================================================================
 # 💻 Desenvolvimento
@@ -431,4 +575,42 @@ shell-frontend: ## 💻 Abrir shell no container frontend
 
 shell-vllm: ## 💻 Abrir shell no container vLLM
 	@docker-compose exec vllm /bin/bash
+
+shell-redis: ## 💻 Abrir shell no container Redis
+	@docker-compose exec redis redis-cli
+
+# ============================================================================
+# 📦 Gestão de Cache Redis
+# ============================================================================
+cache-enable: ## 📦 Habilitar Redis cache no .env
+	@if [ -f .env ]; then \
+		sed -i.bak 's/ENABLE_REDIS_CACHE=.*/ENABLE_REDIS_CACHE=true/' .env && rm -f .env.bak; \
+		$(ECHO) "$(GREEN)✅ Redis cache habilitado no .env$(RESET)"; \
+		$(ECHO) "$(YELLOW)⚠️  Execute 'make up-cache' para iniciar com Redis$(RESET)"; \
+	else \
+		$(ECHO) "$(RED)❌ Ficheiro .env não encontrado!$(RESET)"; \
+		exit 1; \
+	fi
+
+cache-disable: ## 📦 Desabilitar Redis cache no .env
+	@if [ -f .env ]; then \
+		sed -i.bak 's/ENABLE_REDIS_CACHE=.*/ENABLE_REDIS_CACHE=false/' .env && rm -f .env.bak; \
+		$(ECHO) "$(GREEN)✅ Redis cache desabilitado no .env$(RESET)"; \
+	else \
+		$(ECHO) "$(RED)❌ Ficheiro .env não encontrado!$(RESET)"; \
+		exit 1; \
+	fi
+
+cache-clear: ## 📦 Limpar todo o cache Redis
+	@$(ECHO) "$(YELLOW)🧹 A limpar cache Redis...$(RESET)"
+	@docker-compose exec redis redis-cli FLUSHALL
+	@$(ECHO) "$(GREEN)✅ Cache Redis limpo!$(RESET)"
+
+cache-stats: ## 📦 Ver estatísticas do Redis
+	@$(ECHO) "$(CYAN)📊 Estatísticas Redis:$(RESET)"
+	@$(ECHO) ""
+	@docker-compose exec redis redis-cli INFO stats | grep -E "keyspace_hits|keyspace_misses|instantaneous_ops_per_sec" || true
+	@$(ECHO) ""
+	@$(ECHO) "$(BOLD)Chaves em cache:$(RESET)"
+	@docker-compose exec redis redis-cli DBSIZE
 

@@ -23,10 +23,10 @@ class OpenAIService(BaseAIService):
         self.model = settings.openai_model
 
     async def analyze_check(
-        self, check_data: Dict[str, Any], language: str = "en"
-    ) -> str:
-        """Analyze check using OpenAI."""
-        prompt = self._build_prompt(check_data, language)
+        self, check_data: Dict[str, Any], language: str = "en", agent_info: Dict[str, Any] = None
+    ) -> Dict[str, Any]:
+        """Analyze check using OpenAI and return report with remediation script."""
+        prompt = self._build_prompt(check_data, language, agent_info)
 
         try:
             response = await self.client.chat.completions.create(
@@ -34,12 +34,12 @@ class OpenAIService(BaseAIService):
                 messages=[
                     {
                         "role": "system",
-                        "content": "You are a cybersecurity expert specialized in analyzing security configuration assessments.",
+                        "content": "You are a cybersecurity expert specialized in analyzing security configuration assessments and creating executable remediation scripts.",
                     },
                     {"role": "user", "content": prompt},
                 ],
                 temperature=0.1,
-                max_tokens=2048,
+                max_tokens=3072,  # Increased for script generation
             )
 
             report = response.choices[0].message.content.strip()
@@ -53,20 +53,29 @@ class OpenAIService(BaseAIService):
             if not report.startswith("---"):
                 report = f"{header}\n{report}"
 
+            # Parse remediation script from the report
+            os_info = agent_info.get("os") if agent_info else None
+            script_data = self._parse_remediation_script(report, os_info)
+
             logger.info(
                 f"OpenAI analysis completed for check {check_data.get('id')}"
+                + (f" with script ({script_data['script_language']})" if script_data else " (no script)")
             )
-            return report
+
+            return {
+                "report": report,
+                "remediation_script": script_data
+            }
 
         except Exception as e:
             logger.error(f"OpenAI analysis failed: {e}")
             raise AIServiceError(f"OpenAI analysis failed: {str(e)}")
 
     async def analyze_check_stream(
-        self, check_data: Dict[str, Any], language: str = "en"
+        self, check_data: Dict[str, Any], language: str = "en", agent_info: Dict[str, Any] = None
     ) -> AsyncIterator[str]:
         """Stream analysis using OpenAI."""
-        prompt = self._build_prompt(check_data, language)
+        prompt = self._build_prompt(check_data, language, agent_info)
 
         try:
             stream = await self.client.chat.completions.create(

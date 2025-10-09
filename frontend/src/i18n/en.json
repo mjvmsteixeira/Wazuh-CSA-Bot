@@ -11,6 +11,7 @@
     "selectAgent": "Select Wazuh Agent",
     "selectAgentPlaceholder": "Search for an agent...",
     "selectPolicy": "SCA Policy",
+    "scaPolicy": "Active SCA Policy",
     "failedChecks": "Failed Checks",
     "noAgent": "Please select an agent to view checks",
     "noChecks": "No failed checks found",

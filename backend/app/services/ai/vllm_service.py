@@ -17,10 +17,10 @@ class VLLMService(BaseAIService):
         self.model = settings.vllm_model
 
     async def analyze_check(
-        self, check_data: Dict[str, Any], language: str = "en"
-    ) -> str:
-        """Analyze check using vLLM."""
-        prompt = self._build_prompt(check_data, language)
+        self, check_data: Dict[str, Any], language: str = "en", agent_info: Dict[str, Any] = None
+    ) -> Dict[str, Any]:
+        """Analyze check using vLLM and return report with remediation script."""
+        prompt = self._build_prompt(check_data, language, agent_info)
 
         try:
             async with httpx.AsyncClient(timeout=120.0) as client:
@@ -29,7 +29,7 @@ class VLLMService(BaseAIService):
                     json={
                         "model": self.model,
                         "prompt": prompt,
-                        "max_tokens": 2048,
+                        "max_tokens": 3072,  # Increased for script generation
                         "temperature": 0.1,
                         "stop": ["User:", "Check Data:", "End of Report"],
                     },
@@ -47,18 +47,29 @@ class VLLMService(BaseAIService):
                 if not report.startswith("---"):
                     report = f"{header}\n{report}"
 
-                logger.info(f"vLLM analysis completed for check {check_data.get('id')}")
-                return report
+                # Parse remediation script from the report
+                os_info = agent_info.get("os") if agent_info else None
+                script_data = self._parse_remediation_script(report, os_info)
+
+                logger.info(
+                    f"vLLM analysis completed for check {check_data.get('id')}"
+                    + (f" with script ({script_data['script_language']})" if script_data else " (no script)")
+                )
+
+                return {
+                    "report": report,
+                    "remediation_script": script_data
+                }
 
         except Exception as e:
             logger.error(f"vLLM analysis failed: {e}")
             raise AIServiceError(f"vLLM analysis failed: {str(e)}")
 
     async def analyze_check_stream(
-        self, check_data: Dict[str, Any], language: str = "en"
+        self, check_data: Dict[str, Any], language: str = "en", agent_info: Dict[str, Any] = None
     ) -> AsyncIterator[str]:
         """Stream analysis using vLLM."""
-        prompt = self._build_prompt(check_data, language)
+        prompt = self._build_prompt(check_data, language, agent_info)
 
         try:
             async with httpx.AsyncClient(timeout=120.0) as client:

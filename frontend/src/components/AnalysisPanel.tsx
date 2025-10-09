@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
-import { X, Copy, Download, Loader2, CheckCircle } from 'lucide-react';
+import { X, Copy, Download, Loader2, CheckCircle, Share2 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import api, { SCACheck } from '../services/api';
+import ScriptViewer from './ScriptViewer';
 
 interface Props {
   check: SCACheck;
@@ -26,6 +27,7 @@ export default function AnalysisPanel({
 }: Props) {
   const { t } = useTranslation();
   const [copied, setCopied] = useState(false);
+  const queryClient = useQueryClient();
 
   // Analysis mutation
   const analysisMutation = useMutation({
@@ -37,6 +39,17 @@ export default function AnalysisPanel({
         language,
         ai_provider: aiProvider,
       }),
+    onSuccess: async (data) => {
+      console.log('[AnalysisPanel] Analysis completed:', {
+        checkId: check.id,
+        agentId,
+        cached_from: data.cached_from_agent,
+      });
+      // Invalidate and refetch immediately
+      await queryClient.invalidateQueries({ queryKey: ['agent-history', agentId] });
+      await queryClient.refetchQueries({ queryKey: ['agent-history', agentId] });
+      console.log('[AnalysisPanel] Refetched history for agent:', agentId);
+    },
   });
 
   // PDF generation mutation
@@ -78,7 +91,7 @@ export default function AnalysisPanel({
         {/* Header */}
         <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
           <div className="flex-1">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 flex-wrap">
               <h3 className="text-lg font-semibold text-gray-900">
                 {t('analysis.title')} - Check #{check.id}
               </h3>
@@ -92,6 +105,16 @@ export default function AnalysisPanel({
               >
                 {aiProvider === 'vllm' ? '🖥️ Local LLM' : '☁️ OpenAI'}
               </span>
+              {/* Shared Cache Badge */}
+              {analysisMutation.data?.cached_from_agent && (
+                <span
+                  className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800 border border-purple-200"
+                  title={`Analysis reused from agent: ${analysisMutation.data.cached_from_agent}`}
+                >
+                  <Share2 className="w-3 h-3" />
+                  Shared from {analysisMutation.data.cached_from_agent}
+                </span>
+              )}
             </div>
             <p className="text-sm text-gray-500 mt-1">{check.title}</p>
           </div>
@@ -122,9 +145,19 @@ export default function AnalysisPanel({
           )}
 
           {analysisMutation.data && (
-            <div className="prose prose-sm max-w-none">
-              <ReactMarkdown>{analysisMutation.data.report}</ReactMarkdown>
-            </div>
+            <>
+              <div className="prose prose-sm max-w-none">
+                <ReactMarkdown>{analysisMutation.data.report}</ReactMarkdown>
+              </div>
+
+              {/* Remediation Script */}
+              {analysisMutation.data.remediation_script && (
+                <ScriptViewer
+                  script={analysisMutation.data.remediation_script}
+                  checkTitle={check.title}
+                />
+              )}
+            </>
           )}
         </div>
 

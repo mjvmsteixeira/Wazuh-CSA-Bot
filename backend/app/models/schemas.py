@@ -2,6 +2,7 @@
 
 from pydantic import BaseModel, Field
 from typing import List, Optional, Literal
+from datetime import datetime
 
 
 # Agent schemas
@@ -48,6 +49,27 @@ class SCACheckDetails(SCACheck):
     process: Optional[str] = None
     registry: Optional[str] = None
     command: Optional[str] = None
+    reason: Optional[str] = None  # Specific reason why check failed
+
+
+# Remediation Script schemas
+class RemediationScript(BaseModel):
+    """Executable remediation script."""
+
+    script_content: str = Field(..., description="Complete script content")
+    script_language: Literal["bash", "powershell", "python"] = Field(
+        ..., description="Script language/shell"
+    )
+    validation_command: str = Field(..., description="Command to validate the fix")
+    estimated_duration: Optional[str] = Field(
+        None, description="Estimated execution time (e.g., '< 5 seconds')"
+    )
+    requires_root: bool = Field(
+        default=False, description="Whether script requires root/admin privileges"
+    )
+    risks: List[str] = Field(
+        default_factory=list, description="List of potential risks or warnings"
+    )
 
 
 # Analysis request/response schemas
@@ -68,8 +90,14 @@ class AnalysisResponse(BaseModel):
 
     check_id: int
     report: str
+    remediation_script: Optional[RemediationScript] = Field(
+        None, description="Executable remediation script (if available)"
+    )
     ai_provider: str
     language: str
+    cached_from_agent: Optional[str] = Field(
+        None, description="Agent name if this analysis was reused from cache (shared cache)"
+    )
 
 
 # PDF Generation schemas
@@ -115,3 +143,47 @@ class ErrorResponse(BaseModel):
 
     error: str
     detail: Optional[str] = None
+
+
+# Analysis History schemas
+class AnalysisHistoryResponse(BaseModel):
+    """Single analysis history record."""
+
+    id: str
+    agent_id: str
+    agent_name: str
+    policy_id: str
+    check_id: int
+    check_title: str
+    check_description: Optional[str] = None
+    analysis_date: datetime
+    language: Literal["pt", "en"]
+    ai_provider: Literal["vllm", "openai"]
+    report_text: str
+    remediation_script: Optional[RemediationScript] = None  # MISSING FIELD - CRITICAL!
+    status: Literal["pending", "completed", "failed"]
+    error_message: Optional[str] = None
+    execution_time_seconds: Optional[float] = None
+
+    class Config:
+        from_attributes = True
+
+
+class AnalysisHistoryListResponse(BaseModel):
+    """List of analysis history records."""
+
+    analyses: List[AnalysisHistoryResponse]
+    total: int
+    limit: int
+    offset: int
+
+
+class CacheStatsResponse(BaseModel):
+    """Cache statistics."""
+
+    total_analyses: int
+    completed: int
+    failed: int
+    cached_valid: int
+    cache_enabled: bool
+    cache_ttl_hours: int

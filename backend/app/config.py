@@ -33,7 +33,18 @@ class Settings(BaseSettings):
     database_url: str = "sqlite:///./sca_history.db"
 
     # Redis (optional)
+    enable_redis_cache: bool = False
     redis_url: str | None = None
+
+    # Redis TTL (Time To Live) in seconds - Customizable per resource type
+    redis_ttl_default: int = 3600    # Default TTL (1 hour)
+    redis_ttl_agents: int = 300      # Agents cache (5 minutes)
+    redis_ttl_policies: int = 600    # Policies cache (10 minutes)
+    redis_ttl_checks: int = 300      # Checks cache (5 minutes)
+
+    # Analysis History & Cache
+    enable_analysis_cache: bool = True
+    analysis_cache_ttl_hours: int = 24  # Cache analysis results for 24 hours
 
     class Config:
         env_file = ".env"

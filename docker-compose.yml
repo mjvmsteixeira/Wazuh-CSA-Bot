@@ -6,18 +6,28 @@ services:
     profiles:
       - local
       - mixed
-    ports:
-      - "8001:8000"
+    expose:
+      - "8000"
     volumes:
       - ./models:/models
+      - ./scripts:/scripts
     environment:
-      - MODEL_NAME=meta-llama/Meta-Llama-3-8B-Instruct
+      - VLLM_MODEL=${VLLM_MODEL:-meta-llama/Meta-Llama-3-8B-Instruct}
+      - AUTO_DOWNLOAD_MODEL=${AUTO_DOWNLOAD_MODEL:-true}
+      - HF_TOKEN=${HF_TOKEN}
+      - GPU_MEMORY_UTILIZATION=${GPU_MEMORY_UTILIZATION:-0.7}
       - TENSOR_PARALLEL_SIZE=1
       - MAX_MODEL_LEN=4096
+    entrypoint: /bin/bash
     command: >
-      --model /models/Meta-Llama-3-8B-Instruct
+      -c "
+      /scripts/download-model.sh &&
+      python3 -m vllm.entrypoints.openai.api_server
+      --model /models/$$(basename ${VLLM_MODEL:-meta-llama/Meta-Llama-3-8B-Instruct})
       --host 0.0.0.0
       --port 8000
+      --gpu-memory-utilization $${GPU_MEMORY_UTILIZATION:-0.7}
+      "
     deploy:
       resources:
         reservations:
@@ -34,8 +44,9 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     container_name: wazuh-sca-backend
-    ports:
-      - "8000:8000"
+    # Port not exposed externally - only accessible via internal network
+    expose:
+      - "8000"
     environment:
       - WAZUH_API_URL=${WAZUH_API_URL:-https://127.0.0.1:55000}
       - WAZUH_USER=${WAZUH_USER:-wazuh}
@@ -52,6 +63,25 @@ services:
       - ./backend/reports:/app/reports
     networks:
       - wazuh-sca-network
+
+  # Redis Cache (optional)
+  redis:
+    image: redis:7-alpine
+    container_name: wazuh-sca-redis
+    profiles:
+      - cache
+    expose:
+      - "6379"
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes
+    networks:
+      - wazuh-sca-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
 
   # Frontend
   frontend:
@@ -72,3 +102,4 @@ networks:
 
 volumes:
   models:
+  redis-data:

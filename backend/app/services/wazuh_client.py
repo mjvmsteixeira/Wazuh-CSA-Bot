@@ -6,6 +6,7 @@ from typing import List, Dict, Any, Optional
 from app.config import settings
 from app.utils.logger import logger
 from app.utils.exceptions import WazuhAPIError, AgentNotFoundError, CheckNotFoundError
+from app.utils.cache import cached
 
 
 class WazuhClient:
@@ -40,6 +41,7 @@ class WazuhClient:
             self._token = await self._get_token()
         return self._token
 
+    @cached("wazuh:agents", ttl=settings.redis_ttl_agents)
     async def get_agents(self, search: Optional[str] = None) -> List[Dict[str, Any]]:
         """Get list of agents, optionally filtered by search term."""
         token = await self._ensure_token()
@@ -69,6 +71,7 @@ class WazuhClient:
             raise AgentNotFoundError(f"Agent '{agent_name}' not found")
         return agents[0]
 
+    @cached("wazuh:sca:policies", ttl=settings.redis_ttl_policies)
     async def get_sca_policies(self, agent_id: str) -> List[Dict[str, Any]]:
         """Get SCA policies for an agent."""
         token = await self._ensure_token()
@@ -87,6 +90,7 @@ class WazuhClient:
             logger.error(f"Failed to get SCA policies: {e}")
             raise WazuhAPIError(f"Failed to retrieve SCA policies: {str(e)}")
 
+    @cached("wazuh:sca:checks", ttl=settings.redis_ttl_checks)
     async def get_sca_checks(
         self,
         agent_id: str,
